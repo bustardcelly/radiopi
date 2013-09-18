@@ -10,3 +10,8 @@ Feature: Files from audio directory parsed in to mapped listing by year
     Given I have parsed an audio directory at "./features/fixtures/audio"
     When I supply parse result listing to the session
     Then The files without a year tag in ID3 are uncategorized
+
+  Scenario: Files with year in ID3 tag added to listing with year as key
+    Given I have parsed an audio directory at "./features/fixtures/audio"
+    When I supply parse result listing to the session
+    Then The files with a year tag in ID3 are listed by year key
