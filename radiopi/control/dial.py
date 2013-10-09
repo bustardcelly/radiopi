@@ -18,5 +18,5 @@ class Dial:
     self.maximum = max_value
 
   def set_value(self, percentage):
-    self.input_value = self.minimum + round((self.maximum - self.minimum) * percentage)
+    self.input_value = int(self.minimum + round((self.maximum - self.minimum) * percentage))
     self.notify_listeners()
