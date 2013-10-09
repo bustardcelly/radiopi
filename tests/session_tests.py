@@ -4,16 +4,34 @@ from radiopi.os.audiodir import AudioDirectory
 from radiopi.model.session import Session
 
 session = None
+item_listing = []
 directory = AudioDirectory(os.path.join('.', 'features/fixtures/audio'))
+
+def create(year, title, artist):
+  return {
+    'year': year,
+    'title': title,
+    'artist': artist
+  }
 
 def setup_session():
   global session
   session = Session()
   session.inflate(directory.parse())
 
+def setup_filled_session():
+  global session
+  global item_listing
+  session = Session()
+  item_listing.append(create(2001, 'Hello, World', 'Foo, bar'))
+  item_listing.append(create(2001, 'Goodbye, World', 'Baz, quo'))
+  item_listing.append(create(2001, 'All UR Base Belong', 'to, us'))
+  session.files['2001'] = item_listing
+
 def teardown_session():
   global session
   session = None
+  item_listing = []
 
 @with_setup(setup_session, teardown_session)
 def test_session_start_year():
@@ -34,3 +52,9 @@ def test_get_items_by_year():
 def test_get_items_empty_from_year():
   itemslength = len(session.get_items(1984))
   assert_equals(itemslength, 0, 'Expected listing of 0 items from 1997, was %d' % itemslength );
+
+@with_setup(setup_filled_session, teardown_session)
+def test_shuffle_year_items():
+  previous_list = item_listing[:]
+  session.shuffle_items()
+  assert_not_equal(previous_list, item_listing, 'Expected %r to be in different order than %r' % (previous_list, item_listing))

@@ -11,7 +11,7 @@ config = {
     'download_url': 'Where to download it.',
     'author_email': 'bustardcelly@gmail.com',
     'version': '0.1.0',
-    'install_requires': ['nose', 'lettuce'],
+    'install_requires': ['nose', 'lettuce', 'mock'],
     'packages': ['radiopi'],
     'scripts': [],
     'name': 'radiopi'

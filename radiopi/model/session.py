@@ -1,3 +1,4 @@
+from random import shuffle
 from audioitem import AudioItem
 
 class Session:
@@ -12,8 +13,8 @@ class Session:
   def inflate(self, paths):
     for f in paths:
       audio = AudioItem(f)
-      if audio.has_defined_year():
-        year_tag = audio.get_year()
+      if not audio.year is None:
+        year_tag = str(audio.year)
         if not year_tag in self.files:
           self.files[year_tag] = []
         self.files[year_tag].append(audio)
@@ -32,6 +33,11 @@ class Session:
 
   def end_year(self):
     return self.year_listing[len(self.year_listing) - 1] if not len(self.year_listing) == 0 else -1
+
+  def shuffle_items(self):
+    for key, value in self.files.iteritems():
+      if len(value) > 1:
+        shuffle(value)
 
   def get_items(self, year):
     str_year = str(year)

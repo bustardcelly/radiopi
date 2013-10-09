@@ -1,7 +1,7 @@
 .DS_Store
 docs/
 *.sublime-*
-**/*.pyc
+*.pyc
 playground/
 features/fixtures/
 features/todo.txt
