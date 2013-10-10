@@ -1,4 +1,7 @@
 from random import shuffle
+from random import randrange
+
+MIN_START_TIME_MS = 4
 
 class Station():
   def __init__(self, queue=None):
@@ -14,14 +17,14 @@ class Station():
     shuffle(self.queue)
 
   def start(self):
-    file = self.queue[0]
-    start = range_util.random(4, file.length * 0.25)
-    play(file, start)
+    item = self.queue[0]
+    start = randrange(MIN_START_TIME_MS, int(item['length'] * 0.25), 1)
+    self.play(item, start)
 
   def stop(self):
     pass
 
-  def play(self, file, start=0):
+  def play(self, item, start=0):
     pass
 
 class StaticStation(Station):

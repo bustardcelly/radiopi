@@ -1,8 +1,11 @@
 import sys
 import mock
 
+from mock import ANY
 from lettuce import *
 from nose.tools import *
+from radiopi.model.station import MIN_START_TIME_MS
+from radiopi.model.station import Station
 from radiopi.model.session import Session
 from radiopi.control.dial import Dial
 from radiopi.player.radio import Radio
@@ -24,12 +27,15 @@ def given_list_of_files_on_session(steps, player_Radio):
   listing.append(create(2005, 'Hello, World', 'Foo, bar', 'foo.mp3', 10023))
   listing.append(create(2005, 'Goodbye, World', 'Baz, quo', 'bar.mp3', 344453))
   listing.append(create(2005, 'All UR Base Belong', 'to, us', 'baz.mp3', 402))
+
+  station = Station(listing)
+  station.play = mock.Mock(['play'])
   
   session = Session()
-  session.stations['2005'] = listing
+  session.stations['2005'] = station
 
   radio = Radio(session)
-  radio.change_station = mock.Mock(['change_station'])
+  radio.change_station = mock.Mock(wraps=radio.change_station)
 
   dial = Dial()
   dial.range(1997, 2013)
@@ -57,4 +63,10 @@ def then_file_list_is_queued(steps):
 # @Then
 @step('The first file in the associated queue is requested to be played at a random start time')
 def then_file_is_played_at_random_time(steps):
-  pass
+  station = world.session.get_station(2005)
+  item = station.queue[0]
+  start_time = world.radio.station.play.call_args[0][1]
+  world.radio.station.play.assert_called_with(item, ANY)
+  assert_is_instance(start_time, int)
+  assert start_time >= MIN_START_TIME_MS and start_time <= item['length'], \
+    'Expected start time to lie between %d and %d, was %d' % (MIN_START_TIME_MS, item['length'], start_time)
