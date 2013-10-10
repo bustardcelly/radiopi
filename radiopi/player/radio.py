@@ -1,6 +1,7 @@
 
 class Radio():
-  def __init__(self, session):
+  def __init__(self, session, player=None):
+    self.broadcast = player
     self.session = session
     self.station = None
 
@@ -9,7 +10,7 @@ class Radio():
       self.station.stop()
 
     self.station = to_station
-    self.station.start()
+    self.station.start(self.broadcast)
 
   def dial_change_delegate(self, year):
     self.change_station(self.session.get_station(year))

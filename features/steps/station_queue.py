@@ -29,7 +29,7 @@ def given_list_of_files_on_session(steps, player_Radio):
   listing.append(create(2005, 'All UR Base Belong', 'to, us', 'baz.mp3', 402))
 
   station = Station(listing)
-  station.play = mock.Mock(['play'])
+  station.play = mock.Mock(wraps=station.play)
   
   session = Session()
   session.stations['2005'] = station
@@ -55,6 +55,12 @@ def when_dial_control_value_changed(steps):
 def when_dial_control_value_changed(steps):
   world.dial.set_value(0.5)
 
+# @And
+@step('The last item in the queue has been reached and finished')
+def when_index_in_queue_is_at_end(steps):
+  world.radio.station.next()
+  world.radio.station.next()
+
 # @Then
 @step('The list of files associated with corresponding year are queued')
 def then_file_list_is_queued(steps):
@@ -70,3 +76,10 @@ def then_file_is_played_at_random_time(steps):
   assert_is_instance(start_time, int)
   assert start_time >= MIN_START_TIME_MS and start_time <= item['length'], \
     'Expected start time to lie between %d and %d, was %d' % (MIN_START_TIME_MS, item['length'], start_time)
+
+@step('The first item from the queue is requested to be played again at 0 start time')
+def then_the_queue_is_started_over(steps):
+  station = world.radio.station
+  item = station.queue[0]
+  station.next()
+  station.play.assert_called_with(item, 0)

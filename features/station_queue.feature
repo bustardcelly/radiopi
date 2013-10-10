@@ -12,10 +12,8 @@ Feature: Change to Dial value switches station and file queue
     When I change the station
     Then The first file in the associated queue is requested to be played at a random start time
 
-  @skip
   Scenario: Queued file list is wrapped upon play
     Given A list of audio files have been parsed for the session
     When I change the station
-    And The queue has started
     And The last item in the queue has been reached and finished
     Then The first item from the queue is requested to be played again at 0 start time
