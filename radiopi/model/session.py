@@ -1,13 +1,13 @@
-from random import shuffle
-from audioitem import AudioItem
+from radiopi.model.station import Station
+from radiopi.model.audioitem import AudioItem
 
 class Session:
 
   UNCATEGORIZED_KEY = 'N/A'
 
   def __init__(self):
-    self.files = {}
-    self.files[Session.UNCATEGORIZED_KEY] = []
+    self.stations = {}
+    self.stations[Session.UNCATEGORIZED_KEY] = Station()
     self.year_listing = []
 
   def inflate(self, paths):
@@ -15,15 +15,16 @@ class Session:
       audio = AudioItem(f)
       if not audio.year is None:
         year_tag = str(audio.year)
-        if not year_tag in self.files:
-          self.files[year_tag] = []
-        self.files[year_tag].append(audio)
+        if not year_tag in self.stations:
+          self.stations[year_tag] = Station()
+        self.stations[year_tag].add_item(audio)
       else:
-        self.files[Session.UNCATEGORIZED_KEY].append(audio)
+        self.stations[Session.UNCATEGORIZED_KEY].add_item(audio)
     self.generate_listing_by_year()
+    self.shuffle()
 
   def generate_listing_by_year(self):
-    for key in self.files:
+    for key in self.stations:
       if not key == Session.UNCATEGORIZED_KEY:
         self.year_listing.append(int(key))
     sorted(self.year_listing, key=int)
@@ -34,11 +35,10 @@ class Session:
   def end_year(self):
     return self.year_listing[len(self.year_listing) - 1] if not len(self.year_listing) == 0 else -1
 
-  def shuffle_items(self):
-    for key, value in self.files.iteritems():
-      if len(value) > 1:
-        shuffle(value)
+  def shuffle(self):
+    for key, value in self.stations.iteritems():
+      value.shuffle_items()
 
-  def get_items(self, year):
+  def get_station(self, year):
     str_year = str(year)
-    return [] if not str_year in self.files else self.files[str_year]
+    return None if not str_year in self.stations else self.stations[str_year]

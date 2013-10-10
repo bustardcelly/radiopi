@@ -26,14 +26,14 @@ def given_list_of_files_on_session(steps, player_Radio):
   listing.append(create(2005, 'All UR Base Belong', 'to, us', 'baz.mp3', 402))
   
   session = Session()
-  session.files['2005'] = listing
+  session.stations['2005'] = listing
 
   radio = Radio(session)
-  radio.queue = mock.Mock(['queue'])
+  radio.change_station = mock.Mock(['change_station'])
 
   dial = Dial()
   dial.range(1997, 2013)
-  dial.add_listener(radio.station_change_delegate)
+  dial.add_listener(radio.dial_change_delegate)
 
   world.session = session
   world.radio = radio
@@ -44,7 +44,17 @@ def given_list_of_files_on_session(steps, player_Radio):
 def when_dial_control_value_changed(steps):
   world.dial.set_value(0.5)
 
+# @When
+@step('I change the station')
+def when_dial_control_value_changed(steps):
+  world.dial.set_value(0.5)
+
 # @Then
 @step('The list of files associated with corresponding year are queued')
 def then_file_list_is_queued(steps):
-  world.radio.queue.assert_called_with(world.session.get_items(2005))
+  world.radio.change_station.assert_called_with(world.session.get_station(2005))
+
+# @Then
+@step('The first file in the associated queue is requested to be played at a random start time')
+def then_file_is_played_at_random_time(steps):
+  pass

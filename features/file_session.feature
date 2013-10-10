@@ -4,7 +4,7 @@ Feature: Files from audio directory parsed in to mapped listing by year
   Scenario: Files from audio directory listing available in map
     Given I have parsed an audio directory at "./features/fixtures/audio"
     When I supply parse result listing to the session
-    Then The amount of files in the file map of the session is the same as from the list on audio dir
+    Then The amount of files in the station map of the session is the same as from the list on audio dir
 
   Scenario: Files without year in ID3 tag added to uncategorized listing
     Given I have parsed an audio directory at "./features/fixtures/audio"

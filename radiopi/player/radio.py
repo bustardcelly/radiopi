@@ -2,10 +2,14 @@
 class Radio():
   def __init__(self, session):
     self.session = session
-    self.file_queue = None
+    self.station = None
 
-  def queue(self, file_listing):
-    self.file_queue = file_listing
+  def change_station(self, to_station):
+    if not self.station is None:
+      self.station.stop()
 
-  def station_change_delegate(self, year):
-    self.queue(self.session.get_items(year))
+    self.station = to_station
+    self.station.start()
+
+  def dial_change_delegate(self, year):
+    self.change_station(self.session.get_station(year))
