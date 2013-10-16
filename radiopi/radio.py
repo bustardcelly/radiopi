@@ -1,22 +1,25 @@
 import sys
-import usb.core
-import usb.util
+# import usb.core
+# import usb.util
 import time
 import pygame
 
-from radiopi.file.audiodir import AudioDirectory
+from file.audiodir import AudioDirectory
+from model.session import Session
+from player.radio import Radio
+from control.dial import Dial
 
 SONG_END = pygame.USEREVENT + 1
 
 # find our device
-devices = usb.core.find(find_all=True)
+# devices = usb.core.find(find_all=True)
 
-if devices is None:
-  raise ValueError('Device is not connected')
+# if devices is None:
+#   raise ValueError('Device is not connected')
 
-for dev in devices:
-  for cfg in dev:
-    print "cfg value: %r" % str(cfg.bConfigurationValue)
+# for dev in devices:
+#   for cfg in dev:
+#     print "cfg value: %r" % str(cfg.bConfigurationValue)
 
 def main():
   # TODO: Mount USB
