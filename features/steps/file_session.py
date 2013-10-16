@@ -1,6 +1,6 @@
 from lettuce import *
-from radiopi.os.audiodir import AudioDirectory
 from radiopi.model.session import Session
+from radiopi.file.audiodir import AudioDirectory
 
 # @Given
 @step('I have parsed an audio directory at "([^"]*)"')

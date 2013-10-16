@@ -1,3 +1,4 @@
+from .. settings import STATIC_FILE
 from random import shuffle
 from random import randrange
 from radiopi.model.audioitem import AudioItem
@@ -43,4 +44,5 @@ class Station():
 
 class StaticStation(Station):
   def __init__(self, queue=None):
-    Station.__init__(self, [AudioItem('path/to/static.mp3')])
+    default = [AudioItem(STATIC_FILE)]
+    Station.__init__(self, default if queue is None else queue)

@@ -1,5 +1,5 @@
-from radiopi.model.station import Station
 from radiopi.model.audioitem import AudioItem
+from radiopi.model.station import Station, StaticStation
 
 class Session:
 
@@ -7,6 +7,7 @@ class Session:
 
   def __init__(self):
     self.stations = {}
+    self.static = StaticStation()
     self.stations[Session.UNCATEGORIZED_KEY] = Station()
     self.year_listing = []
 
@@ -41,4 +42,4 @@ class Session:
 
   def get_station(self, year):
     str_year = str(year)
-    return None if not str_year in self.stations else self.stations[str_year]
+    return self.static if not str_year in self.stations else self.stations[str_year]

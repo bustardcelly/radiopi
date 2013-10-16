@@ -4,6 +4,8 @@ import usb.util
 import time
 import pygame
 
+from radiopi.file.audiodir import AudioDirectory
+
 SONG_END = pygame.USEREVENT + 1
 
 # find our device

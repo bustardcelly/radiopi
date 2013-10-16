@@ -1,8 +1,7 @@
 import os
 import logging
-
-from radiopi.os.audiodir import AudioDirectory
 from lettuce import *
+from radiopi.file.audiodir import AudioDirectory
 
 logger = logging.getLogger(__name__)
 

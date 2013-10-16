@@ -1,8 +1,8 @@
 import os
 from nose.tools import *
-from radiopi.os.audiodir import AudioDirectory
 from radiopi.model.session import Session
-from radiopi.model.station import Station
+from radiopi.file.audiodir import AudioDirectory
+from radiopi.model.station import Station, StaticStation
 
 session = None
 item_listing = []
@@ -52,7 +52,7 @@ def test_get_items_by_year():
 @with_setup(setup_session, teardown_session)
 def test_get_items_empty_from_year():
   station = session.get_station(1984)
-  assert_equals(station, None, 'Expected no station from 1984, was %r' % station );
+  assert isinstance(station, StaticStation), 'Expected default static station from 1984, was %r' % station;
 
 @with_setup(setup_filled_session, teardown_session)
 def test_shuffle_year_items():
