@@ -17,8 +17,9 @@ for dev in devices:
     print "cfg value: %r" % str(cfg.bConfigurationValue)
 
 def main():
+  # TODO: Mount USB
   session = Session()
-  session.inflate(AudioDirectory('/mnt/usb'))
+  session.inflate(AudioDirectory('/mnt/usb/music'))
 
   player = PyGameBroadcast()
   player.listen_on(SONG_END)

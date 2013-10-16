@@ -38,6 +38,9 @@ class Station():
     self.index = 0 if self.index == self.length() - 1 else self.index + 1
     self.play(self.queue[self.index], 0)
 
+  def __str__(self):
+    return '\n'.join(str(item) for item in self.queue)
+
 class StaticStation(Station):
   def __init__(self, queue=None):
     Station.__init__(self, [AudioItem('path/to/static.mp3')])

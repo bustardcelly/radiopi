@@ -77,6 +77,7 @@ def then_file_is_played_at_random_time(steps):
   assert start_time >= MIN_START_TIME_MS and start_time <= item['length'], \
     'Expected start time to lie between %d and %d, was %d' % (MIN_START_TIME_MS, item['length'], start_time)
 
+# @Then
 @step('The first item from the queue is requested to be played again at 0 start time')
 def then_the_queue_is_started_over(steps):
   station = world.radio.station

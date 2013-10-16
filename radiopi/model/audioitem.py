@@ -1,5 +1,6 @@
 import os
 import re
+import json
 from mutagen import File
 from mutagen.mp3 import MP3
 from mutagen.id3 import ID3, TDRC
@@ -32,3 +33,13 @@ class AudioItem:
 
   def value_from_tag(self, property):
     return self.metadata[property][0].encode('ascii', 'ignore') if property in self.metadata else AudioItem.UNAVAILABLE_FIELD
+
+  def __str__(self):
+    return json.dumps({\
+      'artist': self.artist, \
+      'title': self.title, \
+      'album': self.album, \
+      'filename': self.filename, \
+      'length': self.length, \
+      'year': self.year\
+      })
