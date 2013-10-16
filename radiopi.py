@@ -4,10 +4,10 @@ import sys
 import time
 import pygame
 
-from file.audiodir import AudioDirectory
-from model.session import Session
-from player.radio import Radio
-from control.dial import Dial
+from radiopi.file.audiodir import AudioDirectory
+from radiopi.model.session import Session
+from radiopi.player.radio import Radio
+from radiopi.control.dial import Dial
 
 SONG_END = pygame.USEREVENT + 1
 
