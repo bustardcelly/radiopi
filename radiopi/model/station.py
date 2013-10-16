@@ -1,7 +1,7 @@
-from .. settings import STATIC_FILE
 from random import shuffle
 from random import randrange
-from audioitem import AudioItem
+from radiopi.settings import STATIC_FILE
+from radiopi.model.audioitem import AudioItem
 
 MIN_START_TIME_MS = 4
 

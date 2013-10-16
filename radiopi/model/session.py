@@ -1,5 +1,5 @@
-from audioitem import AudioItem
-from station import Station, StaticStation
+from radiopi.model.audioitem import AudioItem
+from radiopi.model.station import Station, StaticStation
 
 class Session:
 
