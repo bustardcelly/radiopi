@@ -4,6 +4,7 @@ import sys
 import time
 import pygame
 
+from radiopi.player.broadcast import PyGameBroadcast
 from radiopi.file.audiodir import AudioDirectory
 from radiopi.model.session import Session
 from radiopi.player.radio import Radio
@@ -24,7 +25,7 @@ SONG_END = pygame.USEREVENT + 1
 def main():
   # TODO: Mount USB
   session = Session()
-  session.inflate(AudioDirectory('/mnt/usb/music'))
+  session.inflate(AudioDirectory('/mnt/usb/AUDIO').parse())
 
   player = PyGameBroadcast()
   player.listen_on(SONG_END)
@@ -44,3 +45,6 @@ def main():
       dial.set_value(pot.input_value)
     '''
     time.wait(0.5)
+
+if __name__ == '__main__':
+  main()
