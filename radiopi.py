@@ -33,7 +33,7 @@ def main():
   radio = Radio(session, player)
 
   dial = Dial()
-  dial.range(session.start_year, end_year)
+  dial.range(session.start_year, session.end_year)
   dial.add_listener(radio.dial_change_delegate)
 
   while True:
@@ -44,7 +44,7 @@ def main():
     if pot.input_value.changed:
       dial.set_value(pot.input_value)
     '''
-    time.wait(0.5)
+    time.sleep(0.5)
 
 if __name__ == '__main__':
   main()
