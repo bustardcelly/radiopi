@@ -38,7 +38,7 @@ class Station():
 
   def play(self, item, start=0):
     if not self.player is None:
-      self.player.start(item, start)
+      self.player.play(item, start)
 
   def next(self):
     self.index = 0 if self.index == self.length() - 1 else self.index + 1
