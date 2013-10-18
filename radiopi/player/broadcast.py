@@ -15,15 +15,22 @@ class PyGameBroadcast():
   def listen_on(self, event_id):
     pygame.mixer.music.set_endevent(event_id)
 
-  def play(self, filepath, start=0):
+  def play(self, file, start=0):
+    print 'PyGameBroadcast playing: %s' % file.filename
     try:
-      pygame.mixer.music.load(filepath)
+      pygame.mixer.music.load(file.filename)
       pygame.mixer.music.play(0, start)
       self.playing = True
     except pygame.error:
+      print 'Could not play %s! (%s)' % (file.filename, pygame.get_error())
       self.stop()
-      print 'File %s not found! (%s)' % (filepath, pygame.get_error())
+      raise
 
   def stop(self):
-    pygame.mixer.music.stop()
+    try:
+      pygame.mixer.music.stop()
+    except pygame.error:
+      print 'Could not stop player! (%s)' % pygame.get_error()
+      raise
+    
     self.playing = False
