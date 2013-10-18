@@ -24,6 +24,6 @@ class PyGameBroadcast():
       self.stop()
       print 'File %s not found! (%s)' % (filepath, pygame.get_error())
 
-  def stop():
+  def stop(self):
     pygame.mixer.music.stop()
     self.playing = False
