@@ -43,3 +43,8 @@ class Session:
   def get_station(self, year):
     str_year = str(year)
     return self.static if not str_year in self.stations else self.stations[str_year]
+
+  def print_listing(self):
+    for key, value in self.stations.iteritems():
+      print '%s:\n%r' % (key, value)
+

@@ -36,6 +36,8 @@ def main():
   dial.range(session.start_year, session.end_year)
   dial.add_listener(radio.dial_change_delegate)
 
+  session.print_listing()
+
   while True:
     event = pygame.event.poll()
     if event.type == SONG_END:
