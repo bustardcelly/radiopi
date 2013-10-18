@@ -23,7 +23,8 @@ class Station():
   def start(self, player):
     self.index = 0
     item = self.queue[self.index]
-    start = randrange(MIN_START_TIME_MS, int(item['length'] * 0.25), 1)
+    print 'Starting station with: %s' % item
+    start = randrange(MIN_START_TIME_MS, int(item.length * 0.25), 1)
     self.player = player
     self.play(item, start)
 
