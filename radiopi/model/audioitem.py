@@ -42,4 +42,4 @@ class AudioItem:
       'filename': self.filename, \
       'length': self.length, \
       'year': self.year\
-      })
+      }, indent=2)

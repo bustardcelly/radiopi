@@ -46,5 +46,5 @@ class Session:
 
   def print_listing(self):
     for key, value in self.stations.iteritems():
-      print '%s:\n%r' % (key, value)
+      print '%s:\n%s' % (key, value)
 
