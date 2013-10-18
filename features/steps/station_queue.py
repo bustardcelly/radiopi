@@ -10,23 +10,22 @@ from radiopi.model.session import Session
 from radiopi.control.dial import Dial
 from radiopi.player.radio import Radio
 
-def create(year, title, artist, filename, length):
-  return {
-    'year': year,
-    'title': title,
-    'artist': artist,
-    'filename': filename,
-    'length': length
-  }
+class MockAudioItem():
+  def __init__(self, year, title, artist, filename, length):
+    self.year = year
+    self.title = title
+    self.artist = artist
+    self.filename = filename
+    self.length = length
 
 # @Given
 @step('A list of audio files have been parsed for the session')
 @mock.patch('radiopi.player.radio.Radio')
 def given_list_of_files_on_session(steps, player_Radio):
   listing = []
-  listing.append(create(2005, 'Hello, World', 'Foo, bar', 'foo.mp3', 10023))
-  listing.append(create(2005, 'Goodbye, World', 'Baz, quo', 'bar.mp3', 344453))
-  listing.append(create(2005, 'All UR Base Belong', 'to, us', 'baz.mp3', 402))
+  listing.append(MockAudioItem(2005, 'Hello, World', 'Foo, bar', 'foo.mp3', 10023))
+  listing.append(MockAudioItem(2005, 'Goodbye, World', 'Baz, quo', 'bar.mp3', 344453))
+  listing.append(MockAudioItem(2005, 'All UR Base Belong', 'to, us', 'baz.mp3', 402))
 
   station = Station(listing)
   station.play = mock.Mock(wraps=station.play)
@@ -74,8 +73,8 @@ def then_file_is_played_at_random_time(steps):
   start_time = world.radio.station.play.call_args[0][1]
   world.radio.station.play.assert_called_with(item, ANY)
   assert_is_instance(start_time, int)
-  assert start_time >= MIN_START_TIME_MS and start_time <= item['length'], \
-    'Expected start time to lie between %d and %d, was %d' % (MIN_START_TIME_MS, item['length'], start_time)
+  assert start_time >= MIN_START_TIME_MS and start_time <= item.length, \
+    'Expected start time to lie between %d and %d, was %d' % (MIN_START_TIME_MS, item.length, start_time)
 
 # @Then
 @step('The first item from the queue is requested to be played again at 0 start time')
