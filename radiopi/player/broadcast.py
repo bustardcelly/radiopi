@@ -18,9 +18,12 @@ class PyGameBroadcast():
   def play(self, filepath, start=0):
     try:
       pygame.mixer.music.load(filepath)
+      pygame.mixer.music.play(0, start)
+      self.playing = True
     except pygame.error:
+      self.stop()
       print 'File %s not found! (%s)' % (filepath, pygame.get_error())
-    pygame.mixer.music.play(0, start)
 
   def stop():
     pygame.mixer.music.stop()
+    self.playing = False

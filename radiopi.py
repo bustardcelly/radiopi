@@ -39,14 +39,16 @@ def main():
   session.print_listing()
 
   while True:
-    event = pygame.event.poll()
-    if event.type == SONG_END:
-      radio.station.next()
-    '''
-    if pot.input_value.changed:
-      dial.set_value(pot.input_value)
-    '''
-    time.sleep(0.5)
+    while player.playing:
+      event = pygame.event.poll()
+      if event.type == SONG_END:
+        radio.station.next()
+      '''
+      if pot.input_value.changed:
+        dial.set_value(pot.input_value)
+      '''
+      time.sleep(0.5)
+    dial.set_value(0)
 
 if __name__ == '__main__':
   main()
