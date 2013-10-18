@@ -1,5 +1,10 @@
+import os
 import pygame
 import traceback
+
+# Using pygame without graphics/video
+# http://stackoverflow.com/questions/10220104/pygame-error-video-system-not-initialized-on-ubuntu-server-with-only-terminal
+os.environ["SDL_VIDEODRIVER"] = "dummy"
 
 class PyGameBroadcast():
   def __init__(self):
