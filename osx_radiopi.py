@@ -17,7 +17,7 @@ from radiopi import COLORS
 from Tkinter import *
 
 SONG_END = pygame.USEREVENT + 1
-STEP_INCREMENT = 10
+STEP_INCREMENT = 100
 
 root = Tk()
 frame = Frame(root, width=100, height=100)
@@ -25,7 +25,8 @@ frame = Frame(root, width=100, height=100)
 dial_position = 0.0
 previous_dial = -1.0
 session = Session()
-session.inflate(AudioDirectory(os.path.abspath('./features/fixtures/audio')).parse())
+# session.inflate(AudioDirectory(os.path.abspath('./features/fixtures/audio')).parse())
+session.inflate(AudioDirectory(os.path.abspath('/Users/toddanderson/Music/hip hop')).parse())
 
 player = OSXBroadcast()
 player.listen_on(SONG_END)
@@ -36,7 +37,8 @@ dial = Dial()
 dial.range(session.start_year(), session.end_year())
 dial.add_listener(radio.dial_change_delegate)
 
-session.print_listing()
+# session.print_listing()
+session.print_uncategorized()
 
 def limit_dial(step):
   global dial_position

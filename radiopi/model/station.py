@@ -10,7 +10,6 @@ MIN_START_TIME_MS = 4
 
 class Station():
   def __init__(self, queue=None):
-    self.index = 0
     self.player = None
     self.queue = [] if queue is None else queue
 
@@ -24,8 +23,7 @@ class Station():
     shuffle(self.queue)
 
   def start(self, player):
-    self.index = 0
-    item = self.queue[self.index]
+    item = self.queue[0]
     start_range = MIN_START_TIME_MS
     stop_range = round(item.length * 0.25)
     start_range = stop_range if stop_range < start_range else start_range
@@ -41,11 +39,12 @@ class Station():
 
   def play(self, item, start=0):
     if not self.player is None:
+      self.queue.remove(item)
       self.player.play(item, start)
+      self.queue.append(item)
 
   def next(self):
-    self.index = 0 if self.index == self.length() - 1 else self.index + 1
-    self.play(self.queue[self.index], 0)
+    self.play(self.queue[0], 0)
 
   def __str__(self):
     return '\n'.join(str(item) for item in self.queue)

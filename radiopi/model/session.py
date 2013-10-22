@@ -53,3 +53,5 @@ class Session:
     for key, value in self.stations.iteritems():
       prettyprint(COLORS.WHITE, '%s:\n%s' % (key, value))
 
+  def print_uncategorized(self):
+    prettyprint(COLORS.RED, '%s' % self.stations[Session.UNCATEGORIZED_KEY])
