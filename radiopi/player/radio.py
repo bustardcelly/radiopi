@@ -1,3 +1,6 @@
+from radiopi import prettyprint
+from radiopi import COLORS
+
 
 class Radio():
   def __init__(self, session, player=None):
@@ -6,11 +9,15 @@ class Radio():
     self.station = None
 
   def change_station(self, to_station):
-    if not self.station is None:
+    if self.station is to_station:
+      prettyprint(COLORS.YELLOW, 'Already playing station...')
+      return
+    elif not self.station is None:
       self.station.stop()
 
     self.station = to_station
     self.station.start(self.broadcast)
 
   def dial_change_delegate(self, year):
+    prettyprint(COLORS.BLUE, 'Changing year to %r' % year)
     self.change_station(self.session.get_station(year))

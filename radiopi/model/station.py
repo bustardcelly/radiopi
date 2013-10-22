@@ -3,6 +3,9 @@ from random import randrange
 from radiopi.settings import STATIC_FILE
 from radiopi.model.audioitem import AudioItem
 
+from radiopi import prettyprint
+from radiopi import COLORS
+
 MIN_START_TIME_MS = 4
 
 class Station():
@@ -27,7 +30,7 @@ class Station():
     stop_range = round(item.length * 0.25)
     start_range = stop_range if stop_range < start_range else start_range
     stop_range = MIN_START_TIME_MS if start_range != MIN_START_TIME_MS else stop_range
-    print 'Starting station with: %s' % item
+    prettyprint(COLORS.WHITE, 'Starting station with: %s.' % item)
     start = randrange(start_range, stop_range, 1)
     self.player = player
     self.play(item, start)

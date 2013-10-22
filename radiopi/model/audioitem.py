@@ -13,12 +13,13 @@ class AudioItem:
   UNAVAILABLE_FIELD = 'N/A'
 
   def __init__(self, path):
+    self.filepath = path
     self.source = File(path, easy=True)
     self.metadata = self.source.tags
 
   def __getattr__(self, name):
     if name is 'filename':
-      return self.metadata.filename.encode('ascii', 'ignore')
+      return self.filepath
     elif name is 'length':
       return self.source.info.length
     elif name in AudioItem.metaprops:

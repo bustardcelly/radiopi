@@ -1,16 +1,29 @@
+import os
 import sys
 # import usb.core
 # import usb.util
 import time
 import pygame
+import argparse
 
 from radiopi.player.broadcast import PyGameBroadcast
+from radiopi.player.broadcast import OSXBroadcast
 from radiopi.file.audiodir import AudioDirectory
 from radiopi.model.session import Session
 from radiopi.player.radio import Radio
 from radiopi.control.dial import Dial
 
+from radiopi import prettyprint
+from radiopi import COLORS
+
 SONG_END = pygame.USEREVENT + 1
+
+class Unpack(object):
+  pass
+
+parser = argparse.ArgumentParser(description="Ra-dio player.")
+parser.add_argument('-en', '--environment', default='', type=str, \
+  help='Provide the environment to run under.')
 
 # find our device
 # devices = usb.core.find(find_all=True)
@@ -40,7 +53,7 @@ def main():
 
   while True:
     while player.playing:
-      event = pygame.event.poll()
+      event = player.poll()
       if event.type == SONG_END:
         radio.station.next()
       '''
@@ -51,4 +64,9 @@ def main():
     dial.set_value(0)
 
 if __name__ == '__main__':
+  unpack = Unpack()
+  args = parser.parse_args(namespace=unpack)
+  # if args.environment == 'osx':
+  #   osx_main()
+  # else:
   main()

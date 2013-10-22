@@ -1,6 +1,9 @@
 from radiopi.model.audioitem import AudioItem
 from radiopi.model.station import Station, StaticStation
 
+from radiopi import prettyprint
+from radiopi import COLORS
+
 class Session:
 
   UNCATEGORIZED_KEY = 'N/A'
@@ -14,6 +17,7 @@ class Session:
   def inflate(self, paths):
     for f in paths:
       audio = AudioItem(f)
+      # print 'Audio item found: %s' % audio
       if not audio.year is None:
         year_tag = str(audio.year)
         if not year_tag in self.stations:
@@ -23,6 +27,7 @@ class Session:
         self.stations[Session.UNCATEGORIZED_KEY].add_item(audio)
     self.generate_listing_by_year()
     self.shuffle()
+    prettyprint(COLORS.BLUE, 'Year range, %d - %d' % (self.start_year(), self.end_year()))
 
   def generate_listing_by_year(self):
     for key in self.stations:
@@ -46,5 +51,5 @@ class Session:
 
   def print_listing(self):
     for key, value in self.stations.iteritems():
-      print '%s:\n%s' % (key, value)
+      prettyprint(COLORS.WHITE, '%s:\n%s' % (key, value))
 
