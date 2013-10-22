@@ -10,8 +10,8 @@ config = {
     'url': 'URL to get it at.',
     'download_url': 'Where to download it.',
     'author_email': 'bustardcelly@gmail.com',
-    'version': '0.1.0',
-    'install_requires': ['nose', 'lettuce', 'mock'],
+    'version': '0.2.0',
+    'install_requires': ['nose', 'lettuce', 'mock', 'mutagen', 'pygame'],
     'packages': ['radiopi'],
     'scripts': [],
     'name': 'radiopi'

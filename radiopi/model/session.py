@@ -27,13 +27,14 @@ class Session:
         self.stations[Session.UNCATEGORIZED_KEY].add_item(audio)
     self.generate_listing_by_year()
     self.shuffle()
+    prettyprint(COLORS.BLUE, 'Year listing, %r' % self.year_listing)
     prettyprint(COLORS.BLUE, 'Year range, %d - %d' % (self.start_year(), self.end_year()))
 
   def generate_listing_by_year(self):
     for key in self.stations:
       if not key == Session.UNCATEGORIZED_KEY:
         self.year_listing.append(int(key))
-    sorted(self.year_listing, key=int)
+    self.year_listing.sort()
 
   def start_year(self):
     return self.year_listing[0] if not len(self.year_listing) == 0 else -1

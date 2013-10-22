@@ -38,7 +38,7 @@ dial.range(session.start_year(), session.end_year())
 dial.add_listener(radio.dial_change_delegate)
 
 # session.print_listing()
-session.print_uncategorized()
+# session.print_uncategorized()
 
 def limit_dial(step):
   global dial_position
