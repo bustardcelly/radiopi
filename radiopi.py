@@ -22,7 +22,7 @@ class Unpack(object):
   pass
 
 parser = argparse.ArgumentParser(description="Ra-dio player.")
-parser.add_argument('-en', '--environment', default='', type=str, \
+parser.add_argument('-en', '--environment', default='pi', type=str, \
   help='Provide the environment to run under.')
 
 # find our device
@@ -35,7 +35,7 @@ parser.add_argument('-en', '--environment', default='', type=str, \
 #   for cfg in dev:
 #     print "cfg value: %r" % str(cfg.bConfigurationValue)
 
-def main():
+def pi_main():
   # TODO: Mount USB
   session = Session()
   session.inflate(AudioDirectory('/mnt/usb/AUDIO').parse())
@@ -66,7 +66,5 @@ def main():
 if __name__ == '__main__':
   unpack = Unpack()
   args = parser.parse_args(namespace=unpack)
-  # if args.environment == 'osx':
-  #   osx_main()
-  # else:
-  main()
+  if args.environment == 'pi':
+    pi_main()
