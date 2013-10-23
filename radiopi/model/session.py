@@ -1,5 +1,7 @@
 from radiopi.model.audioitem import AudioItem
-from radiopi.model.station import Station, StaticStation
+from radiopi.model.station import Station
+from radiopi.model.station import StaticStation
+from radiopi.model.station import SearchStation
 
 from radiopi import prettyprint
 from radiopi import COLORS
@@ -11,6 +13,7 @@ class Session:
   def __init__(self):
     self.stations = {}
     self.static = StaticStation()
+    self.search = SearchStation()
     self.stations[Session.UNCATEGORIZED_KEY] = Station()
     self.year_listing = []
 
@@ -27,7 +30,6 @@ class Session:
         self.stations[Session.UNCATEGORIZED_KEY].add_item(audio)
     self.generate_listing_by_year()
     self.shuffle()
-    prettyprint(COLORS.BLUE, 'Year listing, %r' % self.year_listing)
     prettyprint(COLORS.BLUE, 'Year range, %d - %d' % (self.start_year(), self.end_year()))
 
   def generate_listing_by_year(self):
@@ -42,6 +44,9 @@ class Session:
   def end_year(self):
     return self.year_listing[len(self.year_listing) - 1] if not len(self.year_listing) == 0 else -1
 
+  def within_range(self, year):
+    return year >= self.start_year() and year <= self.end_year()
+
   def shuffle(self):
     for key, value in self.stations.iteritems():
       value.shuffle_items()
@@ -49,6 +54,9 @@ class Session:
   def get_station(self, year):
     str_year = str(year)
     return self.static if not str_year in self.stations else self.stations[str_year]
+
+  def get_search_station(self):
+    return self.search
 
   def print_listing(self):
     for key, value in self.stations.iteritems():

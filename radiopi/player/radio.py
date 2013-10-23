@@ -20,4 +20,7 @@ class Radio():
 
   def dial_change_delegate(self, year):
     prettyprint(COLORS.BLUE, 'Changing year to %r' % year)
-    self.change_station(self.session.get_station(year))
+    if(self.session.within_range(year)):
+      self.change_station(self.session.get_station(year))
+    else:
+      self.change_station(self.session.get_search_station())

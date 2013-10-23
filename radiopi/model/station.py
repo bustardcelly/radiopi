@@ -1,7 +1,8 @@
 from random import shuffle
 from random import randrange
-from radiopi.settings import STATIC_FILE
 from radiopi.model.audioitem import AudioItem
+
+import radiopi.settings as settings
 
 from radiopi import prettyprint
 from radiopi import COLORS
@@ -49,7 +50,15 @@ class Station():
   def __str__(self):
     return '\n'.join(str(item) for item in self.queue)
 
+class SearchStation(Station):
+  def __init__(self, queue=None):
+    use_queue = queue
+    if use_queue is None:
+      use_queue = []
+      for filepath in settings.SEARCH_FILES:
+        use_queue.append(AudioItem(filepath))
+    Station.__init__(self, use_queue)
+
 class StaticStation(Station):
   def __init__(self, queue=None):
-    default = [AudioItem(STATIC_FILE)]
-    Station.__init__(self, default if queue is None else queue)
+    Station.__init__(self, queue if queue is not None else [AudioItem(settings.STATIC_FILE)])

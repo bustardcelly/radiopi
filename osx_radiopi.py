@@ -15,15 +15,17 @@ from radiopi import prettyprint
 from radiopi import COLORS
 
 from Tkinter import *
+from datetime import datetime
 
 SONG_END = pygame.USEREVENT + 1
 STEP_INCREMENT = 100
+PAUSE_LENGTH = 2 # in seconds
 
 root = Tk()
 frame = Frame(root, width=100, height=100)
 
 dial_position = 0.0
-previous_dial = -1.0
+previous_dial = 0.0
 session = Session()
 # session.inflate(AudioDirectory(os.path.abspath('./features/fixtures/audio')).parse())
 session.inflate(AudioDirectory(os.path.abspath('/Users/toddanderson/Music/hip hop')).parse())
@@ -37,6 +39,8 @@ dial = Dial()
 dial.range(session.start_year(), session.end_year())
 dial.add_listener(radio.dial_change_delegate)
 
+clock = datetime.now()
+
 # session.print_listing()
 # session.print_uncategorized()
 
@@ -47,6 +51,8 @@ def limit_dial(step):
   dial_position = 0 if dial_position < 0 else dial_position
 
 def keypress(event):
+  global clock
+  clock = datetime.now()
   if event.keysym == 'Up':
     limit_dial(1.0)
   elif event.keysym == 'Down':
@@ -58,6 +64,7 @@ def handler(event=None):
   global radio
   global previous_dial
   global dial_position
+  global clock
   try:
     if player.playing:
       event = player.poll()
@@ -66,9 +73,13 @@ def handler(event=None):
         radio.station.next()
       time.sleep(0.5)
     if previous_dial != dial_position:
-      prettyprint(COLORS.BLUE, 'Dial change, value: %f ' % dial_position)
-      previous_dial = dial_position
-      dial.set_value(dial_position)
+      prettyprint(COLORS.YELLOW, 'difference: %d' % (datetime.now() - clock).seconds)
+      if (datetime.now() - clock).seconds >= PAUSE_LENGTH:
+        prettyprint(COLORS.BLUE, 'Dial change, value: %f ' % dial_position)
+        previous_dial = dial_position
+        dial.set_value(dial_position)
+      else:
+        dial.set_roaming()
   except KeyboardInterrupt:
     player.stop()
     sys.exit('\nExplicit close.')
@@ -78,4 +89,5 @@ if __name__ == '__main__':
   frame.bind_all('<Key>', keypress)
   frame.pack()
   root.after(200, handler)
+  dial.set_value(dial_position)
   root.mainloop()
