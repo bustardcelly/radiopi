@@ -153,7 +153,7 @@ def pi_main():
             dial.set_value(dial_value)
           else:
             dial.set_roaming()
-      time.wait(0.5)
+      time.sleep(0.5)
     except KeyboardInterrupt:
       player.stop()
       running = false
