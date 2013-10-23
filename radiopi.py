@@ -95,8 +95,11 @@ def setup_peripherals():
   GPIO.setup(SPICS, GPIO.OUT)
 
 def check_dial():
+  global potentiometer_adc
+  global last_read
   global tolerance
   global dial_value
+
   # read the analog pin
   trim_pot = readadc(potentiometer_adc, SPICLK, SPIMOSI, SPIMISO, SPICS)
   # how much has it changed since the last read?
