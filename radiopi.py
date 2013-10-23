@@ -19,6 +19,7 @@ from radiopi import prettyprint
 from radiopi import COLORS
 
 import RPi.GPIO as GPIO
+from datetime import datetime
 
 SONG_END = pygame.USEREVENT + 1
 STEP_INCREMENT = 100
