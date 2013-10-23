@@ -19,15 +19,18 @@ class Session:
 
   def inflate(self, paths):
     for f in paths:
-      audio = AudioItem(f)
-      # print 'Audio item found: %s' % audio
-      if not audio.year is None:
-        year_tag = str(audio.year)
-        if not year_tag in self.stations:
-          self.stations[year_tag] = Station()
-        self.stations[year_tag].add_item(audio)
-      else:
-        self.stations[Session.UNCATEGORIZED_KEY].add_item(audio)
+      try:
+        audio = AudioItem(f)
+        # print 'Audio item found: %s' % audio
+        if not audio.year is None:
+          year_tag = str(audio.year)
+          if not year_tag in self.stations:
+            self.stations[year_tag] = Station()
+          self.stations[year_tag].add_item(audio)
+        else:
+          self.stations[Session.UNCATEGORIZED_KEY].add_item(audio)
+      except:
+        prettyprint(COLORS.RED, 'Could not convert to audio file for station: %s' % f)
     self.generate_listing_by_year()
     self.shuffle()
     prettyprint(COLORS.BLUE, 'Year range, %d - %d' % (self.start_year(), self.end_year()))

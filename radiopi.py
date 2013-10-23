@@ -87,6 +87,7 @@ def readadc(adcnum, clockpin, mosipin, misopin, cspin):
   return adcout
 
 def setup_peripherals():
+  GPIO.cleanup()
   GPIO.setup(SPIMOSI, GPIO.OUT)
   GPIO.setup(SPIMISO, GPIO.IN)
   GPIO.setup(SPICLK, GPIO.OUT)
