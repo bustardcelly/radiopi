@@ -36,6 +36,10 @@ potentiometer_adc = 0
 last_read = 0
 tolerance = 5
 
+# Dial
+dial_value = 0.0
+previous_dial_value = 0.0
+
 class Unpack(object):
   pass
 
@@ -111,6 +115,9 @@ def check_dial():
     last_read = trim_pot
 
 def pi_main():
+  global dial_value
+  global previous_dial_value
+
   # TODO: Mount USB
   session = Session()
   session.inflate(AudioDirectory('/mnt/usb/AUDIO').parse())
@@ -125,9 +132,6 @@ def pi_main():
   dial.add_listener(radio.dial_change_delegate)
 
   # session.print_listing()
-
-  dial_value = 0.0
-  previous_dial_value = 0.0
   clock = datetime.now()
   running = True
 
@@ -141,6 +145,7 @@ def pi_main():
         if event.type == SONG_END:
           prettyprint(COLORS.WHITE, 'Song end: radio.station.next()')
           radio.station.next()
+        prettyprint(COLORS.YELLOW, 'Previous, %f, now, %f' % (previous_dial_value, dial_value))
         if previous_dial_value != dial_value:
           prettyprint(COLORS.YELLOW, 'difference: %d' % (datetime.now() - clock).seconds)
           if (datetime.now() - clock).seconds >= PAUSE_LENGTH:
