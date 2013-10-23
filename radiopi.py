@@ -104,13 +104,9 @@ def check_dial():
   trim_pot = readadc(potentiometer_adc, SPICLK, SPIMOSI, SPIMISO, SPICS)
   # how much has it changed since the last read?
   pot_adjust = abs(trim_pot - last_read)
-
-  print "trim_pot:", trim_pot
-  print "pot_adjust:", pot_adjust
-  print "last_read", last_read
-
   if pot_adjust > tolerance:
     dial_value = (trim_pot / 10.24) / 100   # convert 10bit adc0 (0-1024) trim pot read into 0-100 volume level
+    prettyprint(COLORS.WHITE, 'POT ADJESTED %f' % dial_value)
     # save the potentiometer reading for the next loop
     last_read = trim_pot
 
