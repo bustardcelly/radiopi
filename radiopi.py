@@ -1,3 +1,5 @@
+# http://learn.adafruit.com/reading-a-analog-in-and-controlling-audio-volume-with-the-raspberry-pi/script
+
 import os
 import sys
 # import usb.core
@@ -16,7 +18,22 @@ from radiopi.control.dial import Dial
 from radiopi import prettyprint
 from radiopi import COLORS
 
+import RPi.GPIO as GPIO
+
 SONG_END = pygame.USEREVENT + 1
+STEP_INCREMENT = 100
+PAUSE_LENGTH = 2 # in seconds
+
+# POT
+GPIO.setmode(GPIO.BCM)
+SPICLK = 18
+SPIMISO = 23
+SPIMOSI = 24
+SPICS = 25
+
+potentiometer_adc = 0
+last_read = 0
+tolerance = 5
 
 class Unpack(object):
   pass
@@ -35,6 +52,63 @@ parser.add_argument('-en', '--environment', default='pi', type=str, \
 #   for cfg in dev:
 #     print "cfg value: %r" % str(cfg.bConfigurationValue)
 
+def readadc(adcnum, clockpin, mosipin, misopin, cspin):
+  if ((adcnum > 7) or (adcnum < 0)):
+    return -1
+
+  GPIO.output(cspin, True)
+  GPIO.output(clockpin, False)  # start clock low
+  GPIO.output(cspin, False)     # bring CS low
+
+  commandout = adcnum
+  commandout |= 0x18  # start bit + single-ended bit
+  commandout <<= 3    # we only need to send 5 bits here
+  for i in range(5):
+    if (commandout & 0x80):
+      GPIO.output(mosipin, True)
+    else:
+      GPIO.output(mosipin, False)
+    commandout <<= 1
+    GPIO.output(clockpin, True)
+    GPIO.output(clockpin, False)
+
+  adcout = 0
+  # read in one empty bit, one null bit and 10 ADC bits
+  for i in range(12):
+    GPIO.output(clockpin, True)
+    GPIO.output(clockpin, False)
+    adcout <<= 1
+    if (GPIO.input(misopin)):
+      adcout |= 0x1
+
+  GPIO.output(cspin, True)
+  
+  adcout >>= 1       # first bit is 'null' so drop it
+  return adcout
+
+def setup_peripherals():
+  GPIO.setup(SPIMOSI, GPIO.OUT)
+  GPIO.setup(SPIMISO, GPIO.IN)
+  GPIO.setup(SPICLK, GPIO.OUT)
+  GPIO.setup(SPICS, GPIO.OUT)
+
+def check_dial():
+  global tolerance
+  global dial_value
+  # read the analog pin
+  trim_pot = readadc(potentiometer_adc, SPICLK, SPIMOSI, SPIMISO, SPICS)
+  # how much has it changed since the last read?
+  pot_adjust = abs(trim_pot - last_read)
+
+  print "trim_pot:", trim_pot
+  print "pot_adjust:", pot_adjust
+  print "last_read", last_read
+
+  if pot_adjust > tolerance:
+    dial_value = (trim_pot / 10.24) / 100   # convert 10bit adc0 (0-1024) trim pot read into 0-100 volume level
+    # save the potentiometer reading for the next loop
+    last_read = trim_pot
+
 def pi_main():
   # TODO: Mount USB
   session = Session()
@@ -49,22 +123,40 @@ def pi_main():
   dial.range(session.start_year(), session.end_year())
   dial.add_listener(radio.dial_change_delegate)
 
-  session.print_listing()
+  # session.print_listing()
 
-  while True:
-    while player.playing:
-      event = player.poll()
-      if event.type == SONG_END:
-        radio.station.next()
-      '''
-      if pot.input_value.changed:
-        dial.set_value(pot.input_value)
-      '''
-      time.sleep(0.5)
-    dial.set_value(0)
+  dial_value = 0.0
+  previous_dial_value = 0.0
+  clock = datetime.now()
+  running = True
+
+  dial.set_value(dial_value)
+
+  while running:
+    try:
+      check_dial()
+      if player.playing:
+        event = player.poll()
+        if event.type == SONG_END:
+          prettyprint(COLORS.WHITE, 'Song end: radio.station.next()')
+          radio.station.next()
+        if previous_dial_value != dial_value:
+          prettyprint(COLORS.YELLOW, 'difference: %d' % (datetime.now() - clock).seconds)
+          if (datetime.now() - clock).seconds >= PAUSE_LENGTH:
+            prettyprint(COLORS.BLUE, 'Dial change, value: %f ' % dial_value)
+            previous_dial_value = dial_value
+            dial.set_value(dial_value)
+          else:
+            dial.set_roaming()
+      time.wait(0.5)
+    except KeyboardInterrupt:
+      player.stop()
+      running = false
+      sys.exit('\nExplicit close.')
 
 if __name__ == '__main__':
   unpack = Unpack()
   args = parser.parse_args(namespace=unpack)
   if args.environment == 'pi':
+    setup_peripherals()
     pi_main()
