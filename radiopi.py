@@ -37,6 +37,7 @@ last_read = 0
 tolerance = 5
 
 # Dial
+clock = 0
 dial_value = 0.0
 previous_dial_value = 0.0
 
@@ -103,6 +104,7 @@ def check_dial():
   global last_read
   global tolerance
   global dial_value
+  global clock
 
   # read the analog pin
   trim_pot = readadc(potentiometer_adc, SPICLK, SPIMOSI, SPIMISO, SPICS)
@@ -113,8 +115,10 @@ def check_dial():
     prettyprint(COLORS.WHITE, 'POT ADJESTED %f' % dial_value)
     # save the potentiometer reading for the next loop
     last_read = trim_pot
+    clock = datetime.now()
 
 def pi_main():
+  global clock
   global dial_value
   global previous_dial_value
 
@@ -132,10 +136,8 @@ def pi_main():
   dial.add_listener(radio.dial_change_delegate)
 
   # session.print_listing()
-  clock = datetime.now()
-  running = True
-
   dial.set_value(dial_value)
+  running = True
 
   while running:
     try:
@@ -145,7 +147,7 @@ def pi_main():
         if event.type == SONG_END:
           prettyprint(COLORS.WHITE, 'Song end: radio.station.next()')
           radio.station.next()
-        prettyprint(COLORS.YELLOW, 'Previous, %f, now, %f' % (previous_dial_value, dial_value))
+        # prettyprint(COLORS.YELLOW, 'Previous, %f, now, %f' % (previous_dial_value, dial_value))
         if previous_dial_value != dial_value:
           prettyprint(COLORS.YELLOW, 'difference: %d' % (datetime.now() - clock).seconds)
           if (datetime.now() - clock).seconds >= PAUSE_LENGTH:
