@@ -14,9 +14,9 @@ def split(text):
 def trim_pad(text, max_length):
   text_length = len(text)
   if text_length < max_length:
-    text = text.ljust(max_length - text_length)
+    text = text.ljust(max_length, ' ')
   elif text_length > max_length:
-    text = text[:max_length-1]
+    text = text[:max_length]
   return text
 
 class ConsoleDisplay():
