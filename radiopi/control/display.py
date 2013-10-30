@@ -14,7 +14,7 @@ def split(text):
 def trim_pad(text, max_length):
   text_length = len(text)
   if text_length < max_length:
-    text.ljust(max_length - text_length)
+    text = text.ljust(max_length - text_length)
   elif text_length > max_length:
     text = text[:max_length-1]
   return text
@@ -44,7 +44,7 @@ class LCDDisplay():
       output = ''
       self.ser.write(WRITE)
       for line in split(text)[:self.rows]:
-        output.append(trim_pad(line, self.columns))
+        output += trim_pad(line, self.columns)
       self.ser.write(output)
       self.context = text
 
