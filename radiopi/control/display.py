@@ -41,9 +41,10 @@ class LCDDisplay():
   def show(self, text):
     if self.context != text:
       lines = split(text)
+      output = ''
       self.ser.write(WRITE)
       for line in split(text)[:self.rows]:
-        line = trim_pad(line, self.columns)
-        prettyprint(COLORS.BLUE, line)
+        output.append(trim_pad(line, self.columns))
+      self.ser.write(output)
       self.context = text
 
