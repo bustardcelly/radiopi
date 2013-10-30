@@ -125,7 +125,7 @@ def pi_main():
 
   # TODO: Mount USB
 
-  display = LCDDisplay()
+  display = LCDDisplay(16, 2)
   display.show('parsing...')
 
   session = Session()
