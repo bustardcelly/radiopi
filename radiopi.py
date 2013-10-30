@@ -24,7 +24,7 @@ from datetime import datetime
 
 SONG_END = pygame.USEREVENT + 1
 STEP_INCREMENT = 100
-PAUSE_LENGTH = 2 # in seconds
+PAUSE_LENGTH = 1 # in seconds
 
 # POT
 GPIO.setmode(GPIO.BCM)
@@ -162,7 +162,7 @@ def pi_main():
           else:
             dial.set_roaming()
         display.show(radio.station.current())
-      time.sleep(0.5)
+      time.sleep(1)
     except KeyboardInterrupt:
       player.stop()
       running = false
