@@ -28,6 +28,9 @@ frame = Frame(root, width=100, height=100)
 dial_position = 0.0
 previous_dial = 0.0
 
+display = ConsoleDisplay()
+display.show('parsing...')
+
 session = Session()
 # session.inflate(AudioDirectory(os.path.abspath('./features/fixtures/audio')).parse())
 session.inflate(AudioDirectory(os.path.abspath('/Users/toddanderson/Music/hip hop')).parse())
@@ -40,8 +43,6 @@ radio = Radio(session, player)
 dial = Dial()
 dial.range(session.start_year(), session.end_year())
 dial.add_listener(radio.dial_change_delegate)
-
-display = ConsoleDisplay()
 
 clock = datetime.now()
 

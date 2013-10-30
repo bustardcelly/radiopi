@@ -124,6 +124,10 @@ def pi_main():
   global previous_dial_value
 
   # TODO: Mount USB
+
+  display = LCDDisplay()
+  display.show('parsing...')
+
   session = Session()
   session.inflate(AudioDirectory('/mnt/usb/AUDIO').parse())
 
@@ -135,8 +139,6 @@ def pi_main():
   dial = Dial()
   dial.range(session.start_year(), session.end_year())
   dial.add_listener(radio.dial_change_delegate)
-
-  display = LCDDisplay()
 
   # session.print_listing()
   dial.set_value(dial_value)
