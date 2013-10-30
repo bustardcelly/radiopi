@@ -43,7 +43,7 @@ class LCDDisplay():
       lines = split(text)
       self.ser.write(WRITE)
       for line in split(text)[:self.rows]:
-        line = trim_pad(line)
+        line = trim_pad(line, self.columns)
         prettyprint(COLORS.BLUE, line)
       self.context = text
 
