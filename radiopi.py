@@ -14,6 +14,7 @@ from radiopi.file.audiodir import AudioDirectory
 from radiopi.model.session import Session
 from radiopi.player.radio import Radio
 from radiopi.control.dial import Dial
+from radiopi.control.display import LCDDisplay
 
 from radiopi import prettyprint
 from radiopi import COLORS
@@ -135,6 +136,8 @@ def pi_main():
   dial.range(session.start_year(), session.end_year())
   dial.add_listener(radio.dial_change_delegate)
 
+  display = LCDDisplay()
+
   # session.print_listing()
   dial.set_value(dial_value)
   running = True
@@ -156,6 +159,7 @@ def pi_main():
             dial.set_value(dial_value)
           else:
             dial.set_roaming()
+        display.show(radio.station.current())
       time.sleep(0.5)
     except KeyboardInterrupt:
       player.stop()
