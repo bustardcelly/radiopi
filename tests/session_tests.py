@@ -36,7 +36,7 @@ def teardown_session():
 
 @with_setup(setup_session, teardown_session)
 def test_session_start_year():
-  expected_start = 1997
+  expected_start = 1979
   assert_equals(session.start_year(), expected_start, 'Expected start year to be %d, was %d' % (expected_start, session.start_year()))
 
 @with_setup(setup_session, teardown_session)

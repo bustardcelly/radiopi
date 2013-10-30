@@ -10,6 +10,7 @@ from radiopi.file.audiodir import AudioDirectory
 from radiopi.model.session import Session
 from radiopi.player.radio import Radio
 from radiopi.control.dial import Dial
+from radiopi.control.display import ConsoleDisplay
 
 from radiopi import prettyprint
 from radiopi import COLORS
@@ -40,6 +41,8 @@ dial = Dial()
 dial.range(session.start_year(), session.end_year())
 dial.add_listener(radio.dial_change_delegate)
 
+display = ConsoleDisplay()
+
 clock = datetime.now()
 
 # session.print_listing()
@@ -62,6 +65,7 @@ def keypress(event):
 def handler(event=None):
   global player
   global dial
+  global display
   global radio
   global previous_dial
   global dial_position
@@ -81,6 +85,7 @@ def handler(event=None):
         dial.set_value(dial_position)
       else:
         dial.set_roaming()
+    display.show(radio.station.current())
   except KeyboardInterrupt:
     player.stop()
     sys.exit('\nExplicit close.')

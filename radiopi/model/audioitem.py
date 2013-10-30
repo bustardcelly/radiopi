@@ -6,10 +6,13 @@ from mutagen.mp3 import MP3
 from mutagen.id3 import ID3, TDRC
 from mutagen.easyid3 import EasyID3
 
+def filename_title(path):
+  return os.path.basename(path)
+
 class AudioItem:
 
   year_regex = re.compile('(\d{4})', re.IGNORECASE)
-  metaprops = ['artist', 'title', 'album']
+  metaprops = ['artist', 'album']
   UNAVAILABLE_FIELD = 'N/A'
 
   def __init__(self, path):
@@ -22,6 +25,9 @@ class AudioItem:
       return self.filepath
     elif name is 'length':
       return self.source.info.length
+    elif name is 'title':
+      title = self.value_from_tag('title')
+      return title if title is not AudioItem.UNAVAILABLE_FIELD else filename_title(self.filepath)
     elif name in AudioItem.metaprops:
       return self.value_from_tag(name)
     elif name is 'year':

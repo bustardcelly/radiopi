@@ -47,6 +47,10 @@ class Station():
   def next(self):
     self.play(self.queue[0], 0)
 
+  def current(self):
+    item = self.queue[-1]
+    return '%s%s%s' % (item.artist, settings.FILEDATA_DELIMITER, item.title)
+
   def __str__(self):
     return '\n'.join(str(item) for item in self.queue)
 
@@ -59,6 +63,12 @@ class SearchStation(Station):
         use_queue.append(AudioItem(filepath))
     Station.__init__(self, use_queue)
 
+  def current(self):
+    return 'searching...'
+
 class StaticStation(Station):
   def __init__(self, queue=None):
     Station.__init__(self, queue if queue is not None else [AudioItem(settings.STATIC_FILE)])
+
+  def current(self):
+    return '... dead air ...'
