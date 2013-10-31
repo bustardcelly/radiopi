@@ -92,6 +92,6 @@ class LCDDisplay():
       self.context = text
       self.scroll()
     else:
-      if threshold > 0:
-        update()
+      if self.threshold > 0:
+        self.update()
 
