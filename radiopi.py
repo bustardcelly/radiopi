@@ -4,6 +4,7 @@ import os
 import sys
 # import usb.core
 # import usb.util
+import math
 import time
 import pygame
 import argparse
@@ -24,7 +25,7 @@ from datetime import datetime
 
 SONG_END = pygame.USEREVENT + 1
 STEP_INCREMENT = 100
-PAUSE_LENGTH = 200 # in microseconds
+PAUSE_LENGTH = 500 # in microseconds
 
 # POT
 GPIO.setmode(GPIO.BCM)
@@ -36,7 +37,7 @@ SPICS = 25
 read_values = []
 potentiometer_adc = 0
 last_read = 0
-tolerance = 10
+tolerance = 3
 
 # Dial
 clock = 0
@@ -106,7 +107,7 @@ def get_average(value):
   read_values.append(value)
   if len(read_values) > 10:
     read_values.pop(0)
-  return sum(read_values) / len(read_values)
+  return math.fsum(read_values) / float(len(read_values))
 
 def check_dial():
   global potentiometer_adc
@@ -116,7 +117,8 @@ def check_dial():
   global clock
 
   # read the analog pin
-  trim_pot = get_average(readadc(potentiometer_adc, SPICLK, SPIMOSI, SPIMISO, SPICS))
+  trim_pot = readadc(potentiometer_adc, SPICLK, SPIMOSI, SPIMISO, SPICS)
+  prettyprint(COLORS.YELLOW, 'trim: %f' % trim_pot)
   # how much has it changed since the last read?
   pot_adjust = abs(trim_pot - last_read)
   if pot_adjust > tolerance:
