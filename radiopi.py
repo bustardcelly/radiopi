@@ -33,6 +33,7 @@ SPIMISO = 23
 SPIMOSI = 24
 SPICS = 25
 
+read_values = []
 potentiometer_adc = 0
 last_read = 0
 tolerance = 10
@@ -100,6 +101,13 @@ def setup_peripherals():
   GPIO.setup(SPICLK, GPIO.OUT)
   GPIO.setup(SPICS, GPIO.OUT)
 
+def get_average(value):
+  global read_values
+  read_values.append(value)
+  if len(read_values) > 10:
+    read_values.pop(0)
+  return sum(read_values) / len(read_values)
+
 def check_dial():
   global potentiometer_adc
   global last_read
@@ -108,7 +116,7 @@ def check_dial():
   global clock
 
   # read the analog pin
-  trim_pot = readadc(potentiometer_adc, SPICLK, SPIMOSI, SPIMISO, SPICS)
+  trim_pot = get_average(readadc(potentiometer_adc, SPICLK, SPIMOSI, SPIMISO, SPICS))
   # how much has it changed since the last read?
   pot_adjust = abs(trim_pot - last_read)
   if pot_adjust > tolerance:
