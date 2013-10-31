@@ -44,6 +44,7 @@ class LCDDisplay():
   def clear(self):
     self.index = 0
     self.vector = 1
+    self.threshold = 0
     del self.lines[0:len(self.lines)]
     self.ser.write(CLEAR)
 
@@ -73,11 +74,10 @@ class LCDDisplay():
       self.scroll_right()
 
   def update(self):
-    if threshold > 0:
-      if self.vector == 1:
-        self.scroll_right()
-      else:
-        self.scroll_left()
+    if self.vector == 1:
+      self.scroll_right()
+    else:
+      self.scroll_left()
 
   def show(self, text):
     if self.context != text:
@@ -92,5 +92,6 @@ class LCDDisplay():
       self.context = text
       self.scroll()
     else:
-      update()
+      if threshold > 0:
+        update()
 
