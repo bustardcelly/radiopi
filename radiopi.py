@@ -25,7 +25,7 @@ from datetime import datetime
 
 SONG_END = pygame.USEREVENT + 1
 STEP_INCREMENT = 100
-PAUSE_LENGTH = 1 # in microseconds
+PAUSE_LENGTH = 500 # in microseconds
 
 # POT
 GPIO.setmode(GPIO.BCM)
@@ -164,8 +164,8 @@ def pi_main():
           radio.station.next()
         # prettyprint(COLORS.YELLOW, 'Previous, %f, now, %f' % (previous_dial_value, dial_value))
         if previous_dial_value != dial_value:
-          prettyprint(COLORS.YELLOW, 'difference: %d' % (datetime.now() - clock).seconds)
-          if (datetime.now() - clock).seconds >= PAUSE_LENGTH:
+          prettyprint(COLORS.YELLOW, 'difference: %d' % (datetime.now() - clock).microseconds)
+          if (datetime.now() - clock).microseconds >= PAUSE_LENGTH:
             prettyprint(COLORS.BLUE, 'Dial change, value: %f ' % dial_value)
             previous_dial_value = dial_value
             dial.set_value(dial_value)

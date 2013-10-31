@@ -1,5 +1,4 @@
 import serial
-from threading import Timer
 
 import radiopi.settings as settings
 
@@ -36,7 +35,6 @@ class LCDDisplay():
     self.threshold = 0
     self.context = None
     self.lines = []
-    self.timer = None
     self.vector = 1
     self.columns = columns
     self.rows = rows
@@ -44,8 +42,6 @@ class LCDDisplay():
     self.clear()
 
   def clear(self):
-    if self.timer is not None:
-      self.timer.cancel()
     self.index = 0
     self.vector = 1
     del self.lines[0:len(self.lines)]
@@ -76,11 +72,12 @@ class LCDDisplay():
     else:
       self.scroll_right()
 
-  def scroll_timer_handler(self):
-    if self.vector == 1:
-      self.scroll_right()
-    else:
-      self.scroll_left()
+  def update(self):
+    if threshold > 0:
+      if self.vector == 1:
+        self.scroll_right()
+      else:
+        self.scroll_left()
 
   def show(self, text):
     if self.context != text:
@@ -94,6 +91,6 @@ class LCDDisplay():
         self.lines.append(pad(row, longest_length))
       self.context = text
       self.scroll()
-      self.timer = Timer(1, self.scroll_timer_handler)
-      self.timer.start()
+    else:
+      update()
 
