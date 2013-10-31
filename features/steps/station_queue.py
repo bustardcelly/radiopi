@@ -32,6 +32,7 @@ def given_list_of_files_on_session(steps, player_Radio):
   
   session = Session()
   session.stations['2005'] = station
+  session.generate_listing_by_year()
 
   radio = Radio(session)
   radio.change_station = mock.Mock(wraps=radio.change_station)
