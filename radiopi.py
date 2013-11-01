@@ -40,6 +40,8 @@ trim_pot = 0
 trim_alpha = 2
 trim_beta = 3
 trim_expo = 2
+variance_count = 0
+variance_limit = 3
 last_read = 0
 tolerance = 5
 
@@ -130,15 +132,21 @@ def check_dial():
   # read the analog pin
   # trim_pot = get_average(readadc(potentiometer_adc, SPICLK, SPIMOSI, SPIMISO, SPICS))
   # trim_pot = get_smooth(readadc(potentiometer_adc, SPICLK, SPIMOSI, SPIMISO, SPICS))
-  trim_pot = get_exponential_smooth(readadc(potentiometer_adc, SPICLK, SPIMOSI, SPIMISO, SPICS))
+  # trim_pot = get_exponential_smooth(readadc(potentiometer_adc, SPICLK, SPIMOSI, SPIMISO, SPICS))
+  trim_pot = readadc(potentiometer_adc, SPICLK, SPIMOSI, SPIMISO, SPICS)
   # how much has it changed since the last read?
   pot_adjust = abs(trim_pot - last_read)
   if pot_adjust > tolerance:
-    dial_value = (trim_pot / 10.24) / 100   # convert 10bit adc0 (0-1024) trim pot read into 0-100 volume level
-    prettyprint(COLORS.WHITE, 'POT ADJESTED. trim: %f, dial: %f' % (trim_pot, dial_value))
-    # save the potentiometer reading for the next loop
-    last_read = trim_pot
-    clock = datetime.now()
+    variance_count += 1
+    if variance_count >= variance_limit:
+      variance_count = 0
+      dial_value = (trim_pot / 10.24) / 100   # convert 10bit adc0 (0-1024) trim pot read into 0-100 volume level
+      prettyprint(COLORS.WHITE, 'POT ADJESTED. trim: %f, dial: %f' % (trim_pot, dial_value))
+      # save the potentiometer reading for the next loop
+      last_read = trim_pot
+      clock = datetime.now()
+  else:
+    variance_count = 0 if variance_count == 0 else variance_count - 1
 
 def pi_main():
   global clock
