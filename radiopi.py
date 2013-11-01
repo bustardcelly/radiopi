@@ -36,6 +36,9 @@ SPICS = 25
 
 read_values = []
 potentiometer_adc = 0
+trim_pot = 0
+trim_alpha = 2
+trim_beta = 3
 last_read = 0
 tolerance = 5
 
@@ -111,13 +114,14 @@ def get_average(value):
 
 def check_dial():
   global potentiometer_adc
+  global trim_pot
   global last_read
   global tolerance
   global dial_value
   global clock
 
   # read the analog pin
-  trim_pot = readadc(potentiometer_adc, SPICLK, SPIMOSI, SPIMISO, SPICS)
+  trim_pot = (readadc(potentiometer_adc, SPICLK, SPIMOSI, SPIMISO, SPICS) * trim_alpha + trim_pot * trim_beta) / (trim_alpha + trim_beta)
   prettyprint(COLORS.YELLOW, 'trim: %f' % trim_pot)
   # how much has it changed since the last read?
   pot_adjust = abs(trim_pot - last_read)
@@ -164,11 +168,10 @@ def pi_main():
           radio.station.next()
         # prettyprint(COLORS.YELLOW, 'Previous, %f, now, %f' % (previous_dial_value, dial_value))
         if previous_dial_value != dial_value:
-          prettyprint(COLORS.YELLOW, 'difference: %d' % (datetime.now() - clock).seconds)
+          # prettyprint(COLORS.YELLOW, 'difference: %d' % (datetime.now() - clock).seconds)
           if (datetime.now() - clock).seconds >= PAUSE_LENGTH:
-            prettyprint(COLORS.BLUE, 'Dial change, value: %f ' % dial_value)
+            prettyprint(COLORS.BLUE, 'YEAR: %d' % dial.set_value(dial_value))
             previous_dial_value = dial_value
-            prettyprint(COLORS.WHITE, 'YEAR: %s' + dial.set_value(dial_value))
           else:
             dial.set_roaming()
         display.show(radio.station.current())
