@@ -39,6 +39,7 @@ potentiometer_adc = 0
 trim_pot = 0
 trim_alpha = 2
 trim_beta = 3
+trim_expo = 2
 last_read = 0
 tolerance = 5
 
@@ -112,6 +113,12 @@ def get_average(value):
     read_values.pop(0)
   return math.fsum(read_values) / float(len(read_values))
 
+def get_weighted_smooth(value):
+  return (value * trim_alpha + trim_pot * trim_beta) / (trim_alpha + trim_beta)
+
+def get_exponential_smooth(value):
+  return trim_pot + (value - trim_pot) >> trim_expo
+
 def check_dial():
   global potentiometer_adc
   global trim_pot
@@ -121,13 +128,14 @@ def check_dial():
   global clock
 
   # read the analog pin
-  trim_pot = (readadc(potentiometer_adc, SPICLK, SPIMOSI, SPIMISO, SPICS) * trim_alpha + trim_pot * trim_beta) / (trim_alpha + trim_beta)
-  prettyprint(COLORS.YELLOW, 'trim: %f' % trim_pot)
+  # trim_pot = get_average(readadc(potentiometer_adc, SPICLK, SPIMOSI, SPIMISO, SPICS))
+  # trim_pot = get_smooth(readadc(potentiometer_adc, SPICLK, SPIMOSI, SPIMISO, SPICS))
+  trim_pot = get_exponential_smooth(readadc(potentiometer_adc, SPICLK, SPIMOSI, SPIMISO, SPICS))
   # how much has it changed since the last read?
   pot_adjust = abs(trim_pot - last_read)
   if pot_adjust > tolerance:
     dial_value = (trim_pot / 10.24) / 100   # convert 10bit adc0 (0-1024) trim pot read into 0-100 volume level
-    prettyprint(COLORS.WHITE, 'POT ADJESTED %f' % dial_value)
+    prettyprint(COLORS.WHITE, 'POT ADJESTED. trim: %f, dial: %f' % (trim_pot, dial_value))
     # save the potentiometer reading for the next loop
     last_read = trim_pot
     clock = datetime.now()
@@ -166,9 +174,7 @@ def pi_main():
         if event.type == SONG_END:
           prettyprint(COLORS.WHITE, 'Song end: radio.station.next()')
           radio.station.next()
-        # prettyprint(COLORS.YELLOW, 'Previous, %f, now, %f' % (previous_dial_value, dial_value))
         if previous_dial_value != dial_value:
-          # prettyprint(COLORS.YELLOW, 'difference: %d' % (datetime.now() - clock).seconds)
           if (datetime.now() - clock).seconds >= PAUSE_LENGTH:
             prettyprint(COLORS.BLUE, 'YEAR: %d' % dial.set_value(dial_value))
             previous_dial_value = dial_value
