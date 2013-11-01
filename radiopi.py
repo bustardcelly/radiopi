@@ -25,7 +25,7 @@ from datetime import datetime
 
 SONG_END = pygame.USEREVENT + 1
 STEP_INCREMENT = 100
-PAUSE_LENGTH = 500 # in microseconds
+PAUSE_LENGTH = 1 # in microseconds
 
 # POT
 GPIO.setmode(GPIO.BCM)
@@ -37,7 +37,7 @@ SPICS = 25
 read_values = []
 potentiometer_adc = 0
 last_read = 0
-tolerance = 3
+tolerance = 5
 
 # Dial
 clock = 0
@@ -164,15 +164,15 @@ def pi_main():
           radio.station.next()
         # prettyprint(COLORS.YELLOW, 'Previous, %f, now, %f' % (previous_dial_value, dial_value))
         if previous_dial_value != dial_value:
-          prettyprint(COLORS.YELLOW, 'difference: %d' % (datetime.now() - clock).microseconds)
-          if (datetime.now() - clock).microseconds >= PAUSE_LENGTH:
+          prettyprint(COLORS.YELLOW, 'difference: %d' % (datetime.now() - clock).seconds)
+          if (datetime.now() - clock).seconds >= PAUSE_LENGTH:
             prettyprint(COLORS.BLUE, 'Dial change, value: %f ' % dial_value)
             previous_dial_value = dial_value
-            dial.set_value(dial_value)
+            prettyprint(COLORS.WHITE, 'YEAR: %s' + dial.set_value(dial_value))
           else:
             dial.set_roaming()
         display.show(radio.station.current())
-      time.sleep(0.8)
+      time.sleep(0.5)
     except KeyboardInterrupt:
       player.stop()
       running = false

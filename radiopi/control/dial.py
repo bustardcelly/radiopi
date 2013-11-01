@@ -26,3 +26,4 @@ class Dial:
     if self.input_value != new_value:
       self.input_value = new_value
       self.notify_listeners()
+    return self.input_value
