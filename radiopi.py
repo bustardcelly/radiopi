@@ -116,14 +116,20 @@ def get_average(value):
   return math.fsum(read_values) / float(len(read_values))
 
 def get_weighted_smooth(value):
+  global trim_pot
+  global trim_alpha
+  global trim_beta
   return (value * trim_alpha + trim_pot * trim_beta) / (trim_alpha + trim_beta)
 
 def get_exponential_smooth(value):
+  global trim_pot
   return trim_pot + (value - trim_pot) >> trim_expo
 
 def check_dial():
   global potentiometer_adc
   global trim_pot
+  global variance_count
+  global variance_limit
   global last_read
   global tolerance
   global dial_value
