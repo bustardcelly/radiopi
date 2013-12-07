@@ -44,6 +44,12 @@ class PyGameBroadcast():
       raise
     self.playing = False
 
+  def set_volume(self, value):
+    pygame.mixer.music.set_value(value)
+
+  def get_volume(self, value):
+    return pygame.mixer.music.get_value()
+
   def poll(self):
     return pygame.event.poll()
 
@@ -86,6 +92,12 @@ class OSXBroadcast():
   def stop(self):
     self.clear()
     call(['killall', 'afplay'])
+
+  def set_volume(self, value):
+    pass
+
+  def get_volume(self, value):
+    return 1.0
 
   def poll(self):
     return self.play_event
