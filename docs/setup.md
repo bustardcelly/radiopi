@@ -11,6 +11,7 @@ WiFi
 ---
 
 * Work: _connected to PlayBrassMonkey_ __pi@10.1.10.24__
+* Work: _connected to ir5_ __pi@192.168.0.59__
 * Home: _connected to antwerp_, __pi@10.0.1.13__
 
 ### Locate connection of Pi.
@@ -89,4 +90,47 @@ Clone to _~/radiopi_
 
 ```
 git clone git@github.com:bustardcelly/radiopi.git radiopi
+```
+
+Setup virtualenv
+
+```
+cd radiopi
+sudo mkvirtualenv ra-dio -r requirements.txt --system-site-packages
+```
+
+### Install external dependencies
+---
+#### PySerial
+```
+wget https://pypi.python.org/packages/source/p/pyserial/pyserial-2.7.tar.gz#md5=794506184df83ef2290de0d18803dd11
+tar -xzf pyserial-2.7.tar.gz
+cd pyserial-2.7/
+sudo ~/.virtualenvs/ra-dio/bin/python setup.py install
+```
+
+### Mount external USB
+---
+Create a mount directory
+
+```
+sudo mkdir /mnt/usb
+```
+
+Insert and Search for mounted usb drive
+
+```
+ls /dev/ | grep sd
+```
+
+Mount the usb drive
+
+```
+sudo mount /dev/sda2 /mnt/usb
+```
+
+### Run
+---
+```
+sudo ~/.virtualenvs/ra-dio/bin/python radiopi.py 
 ```

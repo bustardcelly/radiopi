@@ -1,4 +1,3 @@
-# lettuce --tag=-skip
 Feature: File listing stored upon session inflate
   In order not to parse the same directory that was previously traversed we will hold a record of audio files.
 
