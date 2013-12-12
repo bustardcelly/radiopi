@@ -16,7 +16,6 @@ class PyGameBroadcast():
     try:
       pygame.init()
       pygame.mixer.init()
-      self.set_volume(1)
       self.playing = False
       print 'Pygame Broadcast player started...'
     except:

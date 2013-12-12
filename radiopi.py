@@ -25,7 +25,7 @@ from datetime import datetime
 
 SONG_END = pygame.USEREVENT + 1
 STEP_INCREMENT = 100
-PAUSE_LENGTH = 1 # in microseconds
+PAUSE_LENGTH = 50000 # in microseconds
 
 # POT
 GPIO.setmode(GPIO.BCM)
@@ -165,7 +165,7 @@ def pi_main():
   display.show('parsing...')
 
   session = Session()
-  session.inflate(AudioDirectory('/mnt/usb/AUDIO').parse())
+  session.inflate(AudioDirectory('/mnt/usb/hip hop').parse())
 
   player = PyGameBroadcast()
   player.listen_on(SONG_END)
@@ -189,13 +189,13 @@ def pi_main():
           prettyprint(COLORS.WHITE, 'Song end: radio.station.next()')
           radio.station.next()
         if previous_dial_value != dial_value:
-          if (datetime.now() - clock).seconds >= PAUSE_LENGTH:
+          if (datetime.now() - clock).microseconds >= PAUSE_LENGTH:
             prettyprint(COLORS.BLUE, 'YEAR: %d' % dial.set_value(dial_value))
             previous_dial_value = dial_value
           else:
             dial.set_roaming()
         display.show(radio.station.current())
-      time.sleep(0.5)
+      time.sleep(0.3)
     except KeyboardInterrupt:
       player.stop()
       running = false

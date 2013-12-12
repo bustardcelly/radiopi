@@ -1,3 +1,5 @@
+import re
+
 from radiopi.model.audioitem import AudioItem
 from radiopi.model.station import Station
 from radiopi.model.station import StaticStation
@@ -9,6 +11,7 @@ from radiopi import COLORS
 class Session:
 
   UNCATEGORIZED_KEY = 'N/A'
+  RA_REGEX = re.compile('^(.*?(rakim)[^$]*)$', re.IGNORECASE)
 
   def __init__(self):
     self.stations = {}
@@ -18,9 +21,11 @@ class Session:
     self.year_listing = []
 
   def inflate(self, paths):
+    raStation = Station()
     for f in paths:
       try:
         audio = AudioItem(f)
+        # prettyprint(COLORS.WHITE, 'Audio file: %s' % audio.title)
         # print 'Audio item found: %s' % audio
         if not audio.year is None:
           year_tag = str(audio.year)
@@ -29,11 +34,22 @@ class Session:
           self.stations[year_tag].add_item(audio)
         else:
           self.stations[Session.UNCATEGORIZED_KEY].add_item(audio)
+        # Store Rakim in a special place.
+        if not audio.artist is None and Session.RA_REGEX.match(audio.artist):
+          raStation.add_item(audio)
       except:
         prettyprint(COLORS.RED, 'Could not convert to audio file for station: %s' % f)
     self.generate_listing_by_year()
+    if raStation.length() > 0:
+      self.appendStation(raStation)
     self.shuffle()
     prettyprint(COLORS.BLUE, 'Year range, %d - %d' % (self.start_year(), self.end_year()))
+
+  def appendStation(self, station):
+    ending = self.end_year() + 1
+    self.year_listing.append(ending)
+    self.stations[str(ending)] = station
+    prettyprint(COLORS.BLUE, 'Ra-dio Channel: %d, %d' % (ending, self.stations[ending].length()))
 
   def generate_listing_by_year(self):
     for key in self.stations:
