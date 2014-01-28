@@ -49,7 +49,7 @@ class Session:
     ending = self.end_year() + 1
     self.year_listing.append(ending)
     self.stations[str(ending)] = station
-    prettyprint(COLORS.BLUE, 'Ra-dio Channel: %d, %d' % (ending, self.stations[ending].length()))
+    prettyprint(COLORS.BLUE, 'Ra-dio Channel: %d, %d' % (ending, self.stations[str(ending)].length()))
 
   def generate_listing_by_year(self):
     for key in self.stations:
