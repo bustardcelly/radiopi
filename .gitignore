@@ -1,6 +1,7 @@
 .DS_Store
 docs/*
 !docs/setup.md
+!docs/configuration.*
 *.sublime-*
 *.pyc
 playground/
