@@ -38,8 +38,8 @@ SPICS = 25
 
 # 4x7 Segment
 DATA_PIN = 17
-CLOCK_PIN = 18
-LATCH_PIN = 22
+CLOCK_PIN = 22
+LATCH_PIN = 18
 REGISTER_COUNT = 2
 
 read_values = []
