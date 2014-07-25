@@ -205,7 +205,7 @@ def pi_main():
         if previous_dial_value != dial_value:
           if (datetime.now() - clock).microseconds >= PAUSE_LENGTH:
             year = dial.set_value(dial_value)
-            year_display.show_year(year)
+            year_display.show_number(year)
             prettyprint(COLORS.BLUE, 'YEAR: %d' % year)
             previous_dial_value = dial_value
           else:
