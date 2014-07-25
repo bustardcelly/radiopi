@@ -15,7 +15,9 @@ from radiopi.file.audiodir import AudioDirectory
 from radiopi.model.session import Session
 from radiopi.player.radio import Radio
 from radiopi.control.dial import Dial
+from radiopi.control.shifter import Shifter
 from radiopi.control.display import LCDDisplay
+from radiopi.control.year_display import YearDisplay
 
 from radiopi import prettyprint
 from radiopi import COLORS
@@ -33,6 +35,12 @@ SPICLK = 18
 SPIMISO = 23
 SPIMOSI = 24
 SPICS = 25
+
+# 4x7 Segment
+DATA_PIN = 17
+CLOCK_PIN = 18
+LATCH_PIN = 22
+REGISTER_COUNT = 2
 
 read_values = []
 potentiometer_adc = 0
@@ -164,6 +172,12 @@ def pi_main():
   display = LCDDisplay(16, 2)
   display.show('parsing...')
 
+  shifter = Shifter(DATA_PIN, CLOCK_PIN, LATCH_PIN)
+  shifter.set_shift_register_count(REGISTER_COUNT)
+
+  year_display = YearDisplay(shifter)
+  year_display.show_passive()
+
   session = Session()
   session.inflate(AudioDirectory('/mnt/usb/hip hop').parse())
 
@@ -190,10 +204,13 @@ def pi_main():
           radio.station.next()
         if previous_dial_value != dial_value:
           if (datetime.now() - clock).microseconds >= PAUSE_LENGTH:
-            prettyprint(COLORS.BLUE, 'YEAR: %d' % dial.set_value(dial_value))
+            year = dial.set_value(dial_value)
+            year_display.show_year(year)
+            prettyprint(COLORS.BLUE, 'YEAR: %d' % year)
             previous_dial_value = dial_value
           else:
             dial.set_roaming()
+            year_display.show_passive()
         display.show(radio.station.current())
       time.sleep(0.3)
     except KeyboardInterrupt:
