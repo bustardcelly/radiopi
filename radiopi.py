@@ -17,7 +17,7 @@ from radiopi.player.radio import Radio
 from radiopi.control.dial import Dial
 from radiopi.control.shifter import Shifter
 from radiopi.control.display import LCDDisplay
-from radiopi.control.year_display import YearDisplay
+from radiopi.control.year_display import FourSeven
 
 from radiopi import prettyprint
 from radiopi import COLORS
@@ -175,7 +175,7 @@ def pi_main():
   shifter = Shifter(DATA_PIN, CLOCK_PIN, LATCH_PIN)
   shifter.set_shift_register_count(REGISTER_COUNT)
 
-  year_display = YearDisplay(shifter)
+  year_display = FourSeven(shifter)
   year_display.show_passive()
 
   session = Session()
