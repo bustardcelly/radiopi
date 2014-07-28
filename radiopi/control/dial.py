@@ -20,6 +20,7 @@ class Dial:
   def set_roaming(self):
     self.input_value = self.minimum - 1
     self.notify_listeners()
+    return self.input_value
 
   def set_value(self, percentage):
     new_value = int(self.minimum + round((self.maximum - self.minimum) * percentage))

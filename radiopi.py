@@ -193,6 +193,7 @@ def pi_main():
   # session.print_listing()
   dial.set_value(dial_value)
   running = True
+  year = -1
 
   while running:
     try:
@@ -205,13 +206,13 @@ def pi_main():
         if previous_dial_value != dial_value:
           if (datetime.now() - clock).microseconds >= PAUSE_LENGTH:
             year = dial.set_value(dial_value)
-            year_display.show_number(year)
             prettyprint(COLORS.BLUE, 'YEAR: %d' % year)
             previous_dial_value = dial_value
           else:
-            dial.set_roaming()
-            year_display.show_passive()
+            year = dial.set_roaming()
+            prettyprint(COLORS.BLUE, 'YEAR: ----')
         display.show(radio.station.current())
+        year_display.show_passive() if year == -1 else year_display.show_number(year)
       time.sleep(0.3)
     except KeyboardInterrupt:
       player.stop()
