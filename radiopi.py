@@ -8,7 +8,6 @@ import math
 import time
 import pygame
 import argparse
-import thread
 
 from radiopi.player.broadcast import PyGameBroadcast
 from radiopi.player.broadcast import OSXBroadcast
@@ -59,14 +58,8 @@ clock = 0
 dial_value = 0.0
 previous_dial_value = 0.0
 
-year = -1
-year_display = None
-
 class Unpack(object):
   pass
-
-def show_year(thread_name, sleep):
-  year_display.show_passive() if year == -1 else year_display.show_number(year)
 
 parser = argparse.ArgumentParser(description="Ra-dio player.")
 parser.add_argument('-en', '--environment', default='pi', type=str, \
@@ -174,9 +167,6 @@ def pi_main():
   global dial_value
   global previous_dial_value
 
-  global year
-  global year_display
-
   # TODO: Mount USB
 
   display = LCDDisplay(16, 2)
@@ -205,11 +195,6 @@ def pi_main():
   running = True
   year = -1
 
-  try:
-    thread.start_new_thread(show_year,("Show Year",0))
-  except Exception, e:
-    print e
-
   while running:
     try:
       check_dial()
@@ -227,7 +212,8 @@ def pi_main():
             year = dial.set_roaming()
             prettyprint(COLORS.BLUE, 'YEAR: ----')
         display.show(radio.station.current())
-      time.sleep(0.3)
+        year_display.show_passive() if year == -1 else year_display.show_number(year)
+      # time.sleep(0.3)
     except KeyboardInterrupt:
       player.stop()
       running = false
