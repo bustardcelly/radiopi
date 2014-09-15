@@ -90,6 +90,7 @@ class LCDDisplayThread(threading.Thread):
   def run(self):
     while True:
       self.display.show(self.radio.station.current())
+      time.sleep(0.5)
 
 # find our device
 # devices = usb.core.find(find_all=True)
@@ -228,7 +229,7 @@ def pi_main():
   lcdThread.setDaemon(True)
   yearThread.setDaemon(True)
   lcdThread.start()
-  tearThread.start()
+  yearThread.start()
 
   while running:
     try:
