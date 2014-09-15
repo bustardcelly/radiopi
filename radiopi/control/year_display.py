@@ -41,6 +41,11 @@ class FourSeven:
 
   def show_number(self, number):
     self.clear()
+    
+    if number < 0:
+      self.show_passive()
+      return
+
     digit = 3
     while digit > -1:
       # for value in FourSeven.digits:

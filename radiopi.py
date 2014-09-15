@@ -42,6 +42,7 @@ CLOCK_PIN = 22
 LATCH_PIN = 18
 REGISTER_COUNT = 2
 
+# adc
 read_values = []
 potentiometer_adc = 0
 trim_pot = 0
@@ -52,6 +53,7 @@ variance_count = 0
 variance_limit = 3
 last_read = 0
 tolerance = 5
+avg_alpha = 0.7
 
 # Dial
 clock = 0
@@ -189,6 +191,7 @@ def pi_main():
   dial = Dial()
   dial.range(session.start_year(), session.end_year())
   dial.add_listener(radio.dial_change_delegate)
+  dial.add_listener(year_display.show_number)
 
   # session.print_listing()
   dial.set_value(dial_value)
@@ -212,8 +215,7 @@ def pi_main():
             year = dial.set_roaming()
             prettyprint(COLORS.BLUE, 'YEAR: ----')
         display.show(radio.station.current())
-        year_display.show_passive() if year == -1 else year_display.show_number(year)
-      # time.sleep(0.3)
+      time.sleep(0.3)
     except KeyboardInterrupt:
       player.stop()
       running = false
