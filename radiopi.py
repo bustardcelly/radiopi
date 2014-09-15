@@ -8,6 +8,7 @@ import math
 import time
 import pygame
 import argparse
+import threading
 
 from radiopi.player.broadcast import PyGameBroadcast
 from radiopi.player.broadcast import OSXBroadcast
@@ -60,12 +61,33 @@ clock = 0
 dial_value = 0.0
 previous_dial_value = 0.0
 
-class Unpack(object):
-  pass
-
+# Parse options
 parser = argparse.ArgumentParser(description="Ra-dio player.")
 parser.add_argument('-en', '--environment', default='pi', type=str, \
   help='Provide the environment to run under.')
+
+class Unpack(object):
+  pass
+
+class YearDisplayThread(threading.Thread):
+  """ Thread to print year value based on dial input. """
+  def __init__(self, display, dial):
+    self.display = display
+    self.dial = dial
+    threading.Thread.__init__(self)
+
+  def run(self):
+    self.display.show_number(self.dial.input_value)
+
+class LCDDisplayThread(threading.Thread):
+  """ Thread to print song metadata based on selected radio station. """
+  def __init__(self, display, radio):
+    self.display = display
+    self.radio = radio
+    threading.Thread.__init__(self)
+
+  def run(self):
+    self.display.show(self.radio.station.current())
 
 # find our device
 # devices = usb.core.find(find_all=True)
@@ -169,8 +191,8 @@ def pi_main():
   global dial_value
   global previous_dial_value
 
-  # TODO: Mount USB
-
+  # TODO: Auto Mount USB
+  
   display = LCDDisplay(16, 2)
   display.show('parsing...')
 
@@ -198,6 +220,10 @@ def pi_main():
   running = True
   year = -1
 
+  # threads
+  LCDDisplayThread().start(display, radio)
+  YearDisplayThread().start(year_display, dial)
+
   while running:
     try:
       check_dial()
@@ -214,7 +240,6 @@ def pi_main():
           else:
             year = dial.set_roaming()
             prettyprint(COLORS.BLUE, 'YEAR: ----')
-        display.show(radio.station.current())
       time.sleep(0.3)
     except KeyboardInterrupt:
       player.stop()
