@@ -77,7 +77,8 @@ class YearDisplayThread(threading.Thread):
     threading.Thread.__init__(self)
 
   def run(self):
-    self.display.show_number(self.dial.input_value)
+    while True:
+      self.display.show_number(self.dial.input_value)
 
 class LCDDisplayThread(threading.Thread):
   """ Thread to print song metadata based on selected radio station. """
@@ -87,7 +88,8 @@ class LCDDisplayThread(threading.Thread):
     threading.Thread.__init__(self)
 
   def run(self):
-    self.display.show(self.radio.station.current())
+    while True:
+      self.display.show(self.radio.station.current())
 
 # find our device
 # devices = usb.core.find(find_all=True)
@@ -221,8 +223,12 @@ def pi_main():
   year = -1
 
   # threads
-  LCDDisplayThread().start(display, radio)
-  YearDisplayThread().start(year_display, dial)
+  lcdThread = LCDDisplayThread(display, radio)
+  yearThread = YearDisplayThread(year_display, dial)
+  lcdThread.setDaemon(True)
+  yearThread.setDaemon(True)
+  lcdThread.start()
+  tearThread.start()
 
   while running:
     try:
