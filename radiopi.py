@@ -172,7 +172,7 @@ def check_dial():
 
   # read the analog pin
   # trim_pot = get_average(readadc(potentiometer_adc, SPICLK, SPIMOSI, SPIMISO, SPICS))
-  # trim_pot = get_smooth(readadc(potentiometer_adc, SPICLK, SPIMOSI, SPIMISO, SPICS))
+  # trim_pot = get_weighted_smooth(readadc(potentiometer_adc, SPICLK, SPIMOSI, SPIMISO, SPICS))
   # trim_pot = get_exponential_smooth(readadc(potentiometer_adc, SPICLK, SPIMOSI, SPIMISO, SPICS))
   trim_pot = readadc(potentiometer_adc, SPICLK, SPIMOSI, SPIMISO, SPICS)
   # how much has it changed since the last read?
@@ -216,7 +216,6 @@ def pi_main():
   dial = Dial()
   dial.range(session.start_year(), session.end_year())
   dial.add_listener(radio.dial_change_delegate)
-  dial.add_listener(year_display.show_number)
 
   # session.print_listing()
   dial.set_value(dial_value)
