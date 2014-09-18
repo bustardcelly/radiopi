@@ -20,7 +20,7 @@ from radiopi.control.shifter import Shifter
 from radiopi.control.display import LCDDisplay
 from radiopi.control.year_display import FourSeven
 
-from radiopi.control.mcp3008 import readadc
+from radiopi.control.mcp3008 import ADC
 
 from radiopi import prettyprint
 from radiopi import COLORS
@@ -34,10 +34,14 @@ PAUSE_LENGTH = 50000 # in microseconds
 
 # POT
 GPIO.setmode(GPIO.BCM)
-SPICLK = 18
-SPIMISO = 23
-SPIMOSI = 24
-SPICS = 25
+# SPICLK = 18
+# SPIMISO = 23
+# SPIMOSI = 24
+# SPICS = 25
+SPICLK = 11
+SPIMISO = 9
+SPIMOSI = 10
+SPICS = 8
 
 # 4x7 Segment
 DATA_PIN = 17
@@ -46,6 +50,7 @@ LATCH_PIN = 18
 REGISTER_COUNT = 2
 
 # adc
+adc = None
 read_values = []
 potentiometer_adc = 0
 trim_pot = 0
@@ -165,6 +170,7 @@ def get_exponential_smooth(value):
   return trim_pot + (value - trim_pot) >> trim_expo
 
 def check_dial():
+  global adc
   global potentiometer_adc
   global trim_pot
   global variance_count
@@ -179,7 +185,7 @@ def check_dial():
   # trim_pot = get_weighted_smooth(readadc(potentiometer_adc, SPICLK, SPIMOSI, SPIMISO, SPICS))
   # trim_pot = get_exponential_smooth(readadc(potentiometer_adc, SPICLK, SPIMOSI, SPIMISO, SPICS))
   # trim_pot = readadc(potentiometer_adc, SPICLK, SPIMOSI, SPIMISO, SPICS)
-  trim_pot = readadc(potentiometer_adc)
+  trim_pot = adc.readadc(potentiometer_adc)
   # how much has it changed since the last read?
   pot_adjust = abs(trim_pot - last_read)
   if pot_adjust > tolerance:
@@ -195,6 +201,7 @@ def check_dial():
     variance_count = 0 if variance_count == 0 else variance_count - 1
 
 def pi_main():
+  global adc
   global clock
   global dial_value
   global previous_dial_value
@@ -221,6 +228,9 @@ def pi_main():
   dial = Dial()
   dial.range(session.start_year(), session.end_year())
   dial.add_listener(radio.dial_change_delegate)
+
+  adc = ADC()
+  adc.open()
 
   # session.print_listing()
   dial.set_value(dial_value)
@@ -254,6 +264,7 @@ def pi_main():
       time.sleep(0.3)
     except KeyboardInterrupt:
       player.stop()
+      adc.close()
       running = false
       sys.exit('\nExplicit close.')
 
