@@ -20,6 +20,8 @@ from radiopi.control.shifter import Shifter
 from radiopi.control.display import LCDDisplay
 from radiopi.control.year_display import FourSeven
 
+from radiopi.control.mcp3008 import readadc
+
 from radiopi import prettyprint
 from radiopi import COLORS
 
@@ -102,39 +104,41 @@ class LCDDisplayThread(threading.Thread):
 #   for cfg in dev:
 #     print "cfg value: %r" % str(cfg.bConfigurationValue)
 
-def readadc(adcnum, clockpin, mosipin, misopin, cspin):
-  if ((adcnum > 7) or (adcnum < 0)):
-    return -1
+# // OLD ADC READ
+# def readadc(adcnum, clockpin, mosipin, misopin, cspin):
+#   if ((adcnum > 7) or (adcnum < 0)):
+#     return -1
 
-  GPIO.output(cspin, True)
-  GPIO.output(clockpin, False)  # start clock low
-  GPIO.output(cspin, False)     # bring CS low
+#   GPIO.output(cspin, True)
+#   GPIO.output(clockpin, False)  # start clock low
+#   GPIO.output(cspin, False)     # bring CS low
 
-  commandout = adcnum
-  commandout |= 0x18  # start bit + single-ended bit
-  commandout <<= 3    # we only need to send 5 bits here
-  for i in range(5):
-    if (commandout & 0x80):
-      GPIO.output(mosipin, True)
-    else:
-      GPIO.output(mosipin, False)
-    commandout <<= 1
-    GPIO.output(clockpin, True)
-    GPIO.output(clockpin, False)
+#   commandout = adcnum
+#   commandout |= 0x18  # start bit + single-ended bit
+#   commandout <<= 3    # we only need to send 5 bits here
+#   for i in range(5):
+#     if (commandout & 0x80):
+#       GPIO.output(mosipin, True)
+#     else:
+#       GPIO.output(mosipin, False)
+#     commandout <<= 1
+#     GPIO.output(clockpin, True)
+#     GPIO.output(clockpin, False)
 
-  adcout = 0
-  # read in one empty bit, one null bit and 10 ADC bits
-  for i in range(12):
-    GPIO.output(clockpin, True)
-    GPIO.output(clockpin, False)
-    adcout <<= 1
-    if (GPIO.input(misopin)):
-      adcout |= 0x1
+#   adcout = 0
+#   # read in one empty bit, one null bit and 10 ADC bits
+#   for i in range(12):
+#     GPIO.output(clockpin, True)
+#     GPIO.output(clockpin, False)
+#     adcout <<= 1
+#     if (GPIO.input(misopin)):
+#       adcout |= 0x1
 
-  GPIO.output(cspin, True)
+#   GPIO.output(cspin, True)
   
-  adcout >>= 1       # first bit is 'null' so drop it
-  return adcout
+#   adcout >>= 1       # first bit is 'null' so drop it
+#   return adcout
+# // OLD ADC READ
 
 def setup_peripherals():
   GPIO.cleanup()
@@ -174,7 +178,8 @@ def check_dial():
   # trim_pot = get_average(readadc(potentiometer_adc, SPICLK, SPIMOSI, SPIMISO, SPICS))
   # trim_pot = get_weighted_smooth(readadc(potentiometer_adc, SPICLK, SPIMOSI, SPIMISO, SPICS))
   # trim_pot = get_exponential_smooth(readadc(potentiometer_adc, SPICLK, SPIMOSI, SPIMISO, SPICS))
-  trim_pot = readadc(potentiometer_adc, SPICLK, SPIMOSI, SPIMISO, SPICS)
+  # trim_pot = readadc(potentiometer_adc, SPICLK, SPIMOSI, SPIMISO, SPICS)
+  trim_pot = readadc(potentiometer_adc)
   # how much has it changed since the last read?
   pot_adjust = abs(trim_pot - last_read)
   if pot_adjust > tolerance:
