@@ -53,7 +53,6 @@ class LCDDisplay():
     output = ''
     for line in self.lines:
       output += line[self.index:self.index+self.columns] 
-    print "output: %s" % output
     self.ser.write(output)
 
   def scroll_right(self):

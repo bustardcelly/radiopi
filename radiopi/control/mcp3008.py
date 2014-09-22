@@ -2,10 +2,9 @@
 
 import spidev
 
-
 class ADC():
     def __init__(self):
-        self.spi = spi = spidev.SpiDev()
+        self.spi = spidev.SpiDev()
 
     def open(self):
         self.spi.open(0,1)
