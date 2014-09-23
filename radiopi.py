@@ -79,9 +79,11 @@ class YearDisplayThread(threading.Thread):
     self.dial = dial
     threading.Thread.__init__(self)
 
+  def dial_change(self):
+    self.display.show_number(self.dial.input_value)
+
   def run(self):
-    while True:
-      self.display.show_number(self.dial.input_value)
+    self.dial.add_listener(self.dial_change)
 
 class LCDDisplayThread(threading.Thread):
   """ Thread to print song metadata based on selected radio station. """
@@ -128,7 +130,7 @@ def check_dial():
     if variance_count >= variance_limit:
       variance_count = 0
       dial_value = (trim_pot / 10.24) / 100   # convert 10bit adc0 (0-1024) trim pot read into 0-100 volume level
-      prettyprint(COLORS.WHITE, 'POT ADJESTED. trim: %f, dial: %f' % (trim_pot, dial_value))
+      prettyprint(COLORS.YELLOW, 'POT ADJESTED. trim: %f, dial: %f' % (trim_pot, dial_value))
       # save the potentiometer reading for the next loop
       last_read = trim_pot
       clock = datetime.now()
