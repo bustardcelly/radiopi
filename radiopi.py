@@ -179,7 +179,7 @@ def check_dial():
   # trim_pot = get_weighted_smooth(readadc(potentiometer_adc, SPICLK, SPIMOSI, SPIMISO, SPICS))
   # trim_pot = get_exponential_smooth(readadc(potentiometer_adc, SPICLK, SPIMOSI, SPIMISO, SPICS))
   # trim_pot = readadc(potentiometer_adc, SPICLK, SPIMOSI, SPIMISO, SPICS)
-  trim_pot = readadc(potentiometer_adc)
+  trim_pot = readadc(potentiometer_adc, SPICLK, SPIMOSI, SPIMISO, SPICS)
   # how much has it changed since the last read?
   pot_adjust = abs(trim_pot - last_read)
   if pot_adjust > tolerance:
