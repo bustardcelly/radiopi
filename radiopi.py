@@ -34,10 +34,6 @@ PAUSE_LENGTH = 50000 # in microseconds
 
 # POT
 GPIO.setmode(GPIO.BCM)
-# SPICLK = 18
-# SPIMISO = 23
-# SPIMOSI = 24
-# SPICS = 25
 SPICLK = 11
 SPIMISO = 9
 SPIMOSI = 10
@@ -109,65 +105,8 @@ class LCDDisplayThread(threading.Thread):
 #   for cfg in dev:
 #     print "cfg value: %r" % str(cfg.bConfigurationValue)
 
-# // OLD ADC READ
-# def readadc(adcnum, clockpin, mosipin, misopin, cspin):
-#   if ((adcnum > 7) or (adcnum < 0)):
-#     return -1
-
-#   GPIO.output(cspin, True)
-#   GPIO.output(clockpin, False)  # start clock low
-#   GPIO.output(cspin, False)     # bring CS low
-
-#   commandout = adcnum
-#   commandout |= 0x18  # start bit + single-ended bit
-#   commandout <<= 3    # we only need to send 5 bits here
-#   for i in range(5):
-#     if (commandout & 0x80):
-#       GPIO.output(mosipin, True)
-#     else:
-#       GPIO.output(mosipin, False)
-#     commandout <<= 1
-#     GPIO.output(clockpin, True)
-#     GPIO.output(clockpin, False)
-
-#   adcout = 0
-#   # read in one empty bit, one null bit and 10 ADC bits
-#   for i in range(12):
-#     GPIO.output(clockpin, True)
-#     GPIO.output(clockpin, False)
-#     adcout <<= 1
-#     if (GPIO.input(misopin)):
-#       adcout |= 0x1
-
-#   GPIO.output(cspin, True)
-  
-#   adcout >>= 1       # first bit is 'null' so drop it
-#   return adcout
-# // OLD ADC READ
-
 def setup_peripherals():
   GPIO.cleanup()
-  GPIO.setup(SPIMOSI, GPIO.OUT)
-  GPIO.setup(SPIMISO, GPIO.IN)
-  GPIO.setup(SPICLK, GPIO.OUT)
-  GPIO.setup(SPICS, GPIO.OUT)
-
-def get_average(value):
-  global read_values
-  read_values.append(value)
-  if len(read_values) > 10:
-    read_values.pop(0)
-  return math.fsum(read_values) / float(len(read_values))
-
-def get_weighted_smooth(value):
-  global trim_pot
-  global trim_alpha
-  global trim_beta
-  return (value * trim_alpha + trim_pot * trim_beta) / (trim_alpha + trim_beta)
-
-def get_exponential_smooth(value):
-  global trim_pot
-  return trim_pot + (value - trim_pot) >> trim_expo
 
 def check_dial():
   global adc
@@ -181,10 +120,6 @@ def check_dial():
   global clock
 
   # read the analog pin
-  # trim_pot = get_average(readadc(potentiometer_adc, SPICLK, SPIMOSI, SPIMISO, SPICS))
-  # trim_pot = get_weighted_smooth(readadc(potentiometer_adc, SPICLK, SPIMOSI, SPIMISO, SPICS))
-  # trim_pot = get_exponential_smooth(readadc(potentiometer_adc, SPICLK, SPIMOSI, SPIMISO, SPICS))
-  # trim_pot = readadc(potentiometer_adc, SPICLK, SPIMOSI, SPIMISO, SPICS)
   trim_pot = adc.readadc(potentiometer_adc)
   # how much has it changed since the last read?
   pot_adjust = abs(trim_pot - last_read)
@@ -261,7 +196,7 @@ def pi_main():
           else:
             year = dial.set_roaming()
             prettyprint(COLORS.BLUE, 'YEAR: ----')
-      time.sleep(0.3)
+      time.sleep(0.5)
     except KeyboardInterrupt:
       player.stop()
       adc.close()
