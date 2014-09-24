@@ -7,13 +7,6 @@ WiFi
 ===
 * Used Edimax: [http://elinux.org/RPi_edimax_EW-7811Un](http://elinux.org/RPi_edimax_EW-7811Un)
 
-### Find Used Ports
----
-
-* Work: _connected to PlayBrassMonkey_ __pi@10.1.10.24__
-* Work: _connected to ir5_ __pi@192.168.0.59__
-* Home: _connected to antwerp_, __pi@10.0.1.13__
-
 ### Locate connection of Pi.
 ---
 
@@ -78,6 +71,7 @@ Setup bash paths: (Shell Startup File)
 ```
 sudo apt-get install git-core
 ```
+
 ### Pull radiopi
 ---
 [Generate SSH key](https://help.github.com/articles/generating-ssh-keys): 
@@ -109,6 +103,9 @@ cd pyserial-2.7/
 sudo ~/.virtualenvs/ra-dio/bin/python setup.py install
 ```
 
+### Utilizing SPI
+SPI used for ADC of mcp3008 chip: [http://www.raspberrypi-spy.co.uk/2013/10/analogue-sensors-on-the-raspberry-pi-using-an-mcp3008/](http://www.raspberrypi-spy.co.uk/2013/10/analogue-sensors-on-the-raspberry-pi-using-an-mcp3008/)
+
 ### Mount external USB
 ---
 Create a mount directory
@@ -126,7 +123,7 @@ ls /dev/ | grep sd
 Mount the usb drive
 
 ```
-sudo mount /dev/sda2 /mnt/usb
+sudo mount /dev/sda1 /mnt/usb
 ```
 
 ### Run
