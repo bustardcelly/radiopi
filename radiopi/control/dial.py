@@ -18,7 +18,7 @@ class Dial:
     self.maximum = max_value
 
   def set_roaming(self):
-    self.input_value = self.minimum - 1
+    self.input_value = -1
     self.notify_listeners()
     return self.input_value
 
