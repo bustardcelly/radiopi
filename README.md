@@ -1,5 +1,7 @@
 Setup
 ---
+Pull down repo on Raspberry Pi (used Raspbien Wheezy).
+
 Create virtual environment and resolve dependencies
 
 ```
