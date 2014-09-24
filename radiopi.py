@@ -79,11 +79,9 @@ class YearDisplayThread(threading.Thread):
     self.dial = dial
     threading.Thread.__init__(self)
 
-  def dial_change(self):
-    self.display.show_number(self.dial.input_value)
-
   def run(self):
-    self.dial.add_listener(self.dial_change)
+    while True:
+      self.display.show_number(self.dial.input_value)
 
 class LCDDisplayThread(threading.Thread):
   """ Thread to print song metadata based on selected radio station. """
