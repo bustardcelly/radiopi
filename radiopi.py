@@ -21,6 +21,7 @@ from radiopi.control.display import LCDDisplay
 from radiopi.control.year_display import FourSeven
 
 from radiopi.control.mcp3008 import ADC
+from radiopi.control.mcp3008 import ADC2
 
 from radiopi import prettyprint
 from radiopi import COLORS
