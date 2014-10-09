@@ -109,9 +109,28 @@ class LCDDisplayThread(threading.Thread):
 def setup_peripherals():
   GPIO.cleanup()
 
-def check_dial():
+weight = []
+def weighted_adc():
   global adc
   global potentiometer_adc
+  
+  highest = 0
+  weighted_value = 0
+  val = adc.readadc(potentiometer_adc)
+  weight.append(val)
+
+  for value in weight:
+    check = weight.count(value)
+    if check > highest:
+      highest = check
+      weighted_value = value
+
+  if len(weight) > 10:
+    weight.pop(0)
+  
+  return weighted_value
+
+def check_dial():
   global trim_pot
   global variance_count
   global variance_limit
@@ -121,7 +140,7 @@ def check_dial():
   global clock
 
   # read the analog pin
-  trim_pot = adc.readadc(potentiometer_adc)
+  trim_pot = weighted_adc()
   # how much has it changed since the last read?
   pot_adjust = abs(trim_pot - last_read)
   if pot_adjust > tolerance:
