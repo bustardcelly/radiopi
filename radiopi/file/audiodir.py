@@ -5,7 +5,7 @@ class AudioDirectory:
 
   location = None
   filepaths = None
-  extension = re.compile('(.*?).m(p3|4a)', re.IGNORECASE)
+  extension = re.compile('^(?!._)(.*?).m(p3|4a)', re.IGNORECASE)
 
   def __init__(self, location):
     self.location = location
