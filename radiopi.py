@@ -220,7 +220,7 @@ def pi_main():
     except KeyboardInterrupt:
       player.stop()
       adc.close()
-      running = false
+      running = False
       sys.exit('\nExplicit close.')
 
 if __name__ == '__main__':
