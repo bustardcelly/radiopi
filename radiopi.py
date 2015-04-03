@@ -160,9 +160,10 @@ def pi_main():
   global clock
   global dial_value
   global previous_dial_value
+  global tolerance
 
   # TODO: Auto Mount USB
-  
+
   display = LCDDisplay(16, 2)
   display.show('parsing...')
 
@@ -177,20 +178,23 @@ def pi_main():
 
   player = PyGameBroadcast()
   player.listen_on(SONG_END)
-  
+
   radio = Radio(session, player)
 
   dial = Dial()
   dial.range(session.start_year(), session.end_year())
   dial.add_listener(radio.dial_change_delegate)
 
-  adc = ADC()
+  adc = ADC2()
   adc.open()
 
   # session.print_listing()
   dial.set_value(dial_value)
   running = True
   year = -1
+
+  tolerance = 1024 / (session.end_year() - session.start_year())
+  prettyprint(COLORS.BLUE, 'Tolerance: %d' % tolerance)
 
   # threads
   lcdThread = LCDDisplayThread(display, radio)

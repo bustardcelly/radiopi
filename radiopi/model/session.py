@@ -1,3 +1,4 @@
+import sys
 import re
 
 from radiopi.model.audioitem import AudioItem
@@ -38,7 +39,8 @@ class Session:
         # Store Rakim in a special place.
         if not audio.artist is None and Session.RA_REGEX.match(audio.artist):
           raStation.add_item(audio)
-      except e:
+      except:
+        e = sys.exc_info()[0]
         prettyprint(COLORS.RED, 'Could not convert to audio file for station: %s' % f)
         prettyprint(COLORS.RED, e)
     self.generate_listing_by_year()
