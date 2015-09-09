@@ -5,7 +5,7 @@ import time
 
 if __name__ == '__main__':
   GPIO.setmode(GPIO.BCM)
-  adc = ADC()
+  adc = ADC2()
   adc.open()
   while True:
     try:

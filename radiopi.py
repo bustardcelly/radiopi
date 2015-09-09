@@ -140,7 +140,8 @@ def check_dial():
   global clock
 
   # read the analog pin
-  trim_pot = weighted_adc()
+  # trim_pot = weighted_adc()
+  trim_pot = adc.read_adc(potentiometer_adc)
   # how much has it changed since the last read?
   pot_adjust = abs(trim_pot - last_read)
   if pot_adjust > tolerance:
