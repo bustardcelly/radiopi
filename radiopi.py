@@ -263,7 +263,8 @@ def pi_main():
 if __name__ == '__main__':
   unpack = Unpack()
   args = parser.parse_args(namespace=unpack)
-  audio_json = os.path.abspath(args.file)
+  if args.file is not None:
+    audio_json = os.path.abspath(args.file)
   print "Optional JSON file to read: %s" % audio_json
   if args.environment == 'pi':
     setup_peripherals()
