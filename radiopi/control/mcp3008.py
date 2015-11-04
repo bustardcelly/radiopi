@@ -4,9 +4,9 @@
 import RPi.GPIO as GPIO
 import spidev
 
-SPICLK = 11
+SPICLK = 27
 SPIMISO = 9
-SPIMOSI = 10
+SPIMOSI = 4
 SPICS = 25
 
 class ADC():

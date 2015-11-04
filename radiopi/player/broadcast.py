@@ -1,5 +1,5 @@
 import os
-import sys 
+import sys
 import pygame
 import traceback
 from subprocess import Popen as call

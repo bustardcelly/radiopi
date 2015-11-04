@@ -51,6 +51,10 @@ class Station():
     item = self.queue[-1]
     return '%s%s%s' % (item.artist, settings.FILEDATA_DELIMITER, item.title)
 
+  def current_image(self):
+    item = self.queue[-1]
+    return item.image
+
   def __str__(self):
     return '\n'.join(str(item) for item in self.queue)
 

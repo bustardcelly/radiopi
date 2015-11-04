@@ -19,6 +19,11 @@ class AudioItem:
     self.filepath = path
     self.source = File(path, easy=True)
     self.metadata = self.source.tags
+    self.image_data = None
+    try:
+      self.image_data = File(path).tags['APIC:'].data
+    except:
+      print "No image found for file %s" % path
 
   def __getattr__(self, name):
     if name is 'filename':
@@ -35,6 +40,8 @@ class AudioItem:
       if value is not AudioItem.UNAVAILABLE_FIELD:
         value = str(AudioItem.year_regex.match(value).group())
       return value
+    elif name is 'image':
+      return self.image_data
     else:
       return object.__getattribute__(self, name)
 
