@@ -4,6 +4,7 @@ docs/*
 !docs/configuration.*
 *.sublime-*
 *.pyc
+pygame/
 playground/
 features/fixtures/
 features/todo.txt

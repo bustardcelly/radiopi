@@ -23,7 +23,8 @@ class AudioItem:
     try:
       self.image_data = File(path).tags['APIC:'].data
     except:
-      print "No image found for file %s" % path
+      pass
+#      print "No image found for file %s" % path
 
   def __getattr__(self, name):
     if name is 'filename':

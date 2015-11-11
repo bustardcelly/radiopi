@@ -33,8 +33,8 @@ class AudioJSON:
     def parse(self):
         global extension
         self.filepaths = []
-        if data is not None:
-            for key, value in data.items():
+        if self.data is not None:
+            for key, value in self.data.items():
                 for itemKey, itemValue in value.items():
                     if itemKey == "files":
                         for item in itemValue:

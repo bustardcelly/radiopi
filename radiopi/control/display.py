@@ -5,7 +5,8 @@ import radiopi.settings as settings
 from radiopi import prettyprint
 from radiopi import COLORS
 
-CLEAR = "x\0C"
+CLEAR = "\x0C"
+BACKLIGHT = "\x7C"
 WRITE = "\xfe\x01"
 SCROLL_LEFT = "x18"
 SCROLL_RIGHT = "x1C"

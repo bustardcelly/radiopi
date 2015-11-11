@@ -34,7 +34,7 @@ class Session:
             self.stations[year_tag] = Station()
           self.stations[year_tag].add_item(audio)
         else:
-          prettyprint('Audio file has no year: %s' % f)
+          prettyprint(COLORS.YELLOW, '[WARN] Audio file has no year: %s' % f)
           self.stations[Session.UNCATEGORIZED_KEY].add_item(audio)
         # Store Rakim in a special place.
         if not audio.artist is None and Session.RA_REGEX.match(audio.artist):
