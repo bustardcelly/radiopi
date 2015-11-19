@@ -1,15 +1,17 @@
 import serial
+import time
+import RPi.GPIO as GPIO
 
 import radiopi.settings as settings
 
 from radiopi import prettyprint
 from radiopi import COLORS
 
-CLEAR = "\x0C"
-BACKLIGHT = "\x7C"
-WRITE = "\xfe\x01"
-SCROLL_LEFT = "x18"
-SCROLL_RIGHT = "x1C"
+CLEAR = b'\xFE\x0C'
+BACKLIGHT = b'\xFE\x7C'
+WRITE = b'\xFE\x01'
+OFF = b'\xFE\x41'
+ON = b'\xFE\x42'
 
 def split(text):
   return text.rsplit(settings.FILEDATA_DELIMITER)
@@ -32,6 +34,7 @@ class ConsoleDisplay():
 
 class LCDDisplay():
   def __init__(self, columns, rows):
+    print "LCDDisplay init()..."
     self.index = 0
     self.threshold = 0
     self.context = None
@@ -40,7 +43,11 @@ class LCDDisplay():
     self.columns = columns
     self.rows = rows
     self.ser = serial.Serial('/dev/ttyAMA0', 9600, timeout=0.1)
+    self.ser.write(OFF)
+    self.ser.write(ON)
+    self.ser.write(WRITE)
     self.clear()
+    time.sleep(2)
 
   def clear(self):
     self.index = 0
