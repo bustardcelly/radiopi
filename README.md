@@ -26,6 +26,33 @@ Mount the usb drive
 $ sudo mount /dev/sda2 /mnt/usb
 ```
 
+### Modifications to Raspbien in order to dedicate the TTY to the LCD
+
+[http://www.hobbytronics.co.uk/raspberry-pi-serial-port](http://www.hobbytronics.co.uk/raspberry-pi-serial-port)
+
+Modify the inittab:
+
+```
+$ vim /etc/inittab
+```
+
+Comment out the following:
+
+```
+#Spawn a getty on Raspberry Pi serial line
+# T0:23:respawn:/sbin/getty -L ttyAMA0 115200 vt100
+```
+
+
+Modify the cmdline usage:
+
+```
+$ vim /boot/cmdline.txt
+```
+
+Remove the following:  
+dwc_otg.lpm_enable=0 `console=ttyAMA0,115200 kgdboc=ttyAMA0,115200` console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline rootwait
+
 Run
 ---
 ```
