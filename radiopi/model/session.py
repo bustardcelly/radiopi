@@ -1,7 +1,6 @@
 import sys
 import re
 
-from radiopi.model.audioitem import AudioItem
 from radiopi.model.station import Station
 from radiopi.model.station import StaticStation
 from radiopi.model.station import SearchStation
@@ -21,28 +20,21 @@ class Session:
     self.stations[Session.UNCATEGORIZED_KEY] = Station()
     self.year_listing = []
 
-  def inflate(self, paths):
+  def inflate(self, audio_items):
     raStation = Station()
-    for f in paths:
-      try:
-        audio = AudioItem(f)
-        # prettyprint(COLORS.WHITE, 'Audio file: %s' % audio.title)
-        # print 'Audio item found: %s' % audio
-        if not audio.year is None:
-          year_tag = str(audio.year)
-          if not year_tag in self.stations:
-            self.stations[year_tag] = Station()
-          self.stations[year_tag].add_item(audio)
-        else:
-          prettyprint(COLORS.YELLOW, '[WARN] Audio file has no year: %s' % f)
-          self.stations[Session.UNCATEGORIZED_KEY].add_item(audio)
-        # Store Rakim in a special place.
-        if not audio.artist is None and Session.RA_REGEX.match(audio.artist):
-          raStation.add_item(audio)
-      except:
-        e = sys.exc_info()[0]
-        prettyprint(COLORS.RED, 'Could not convert to audio file for station: %s' % f)
-        prettyprint(COLORS.RED, e)
+    for audio in audio_items:
+#      print audio
+      if not audio.year is None and not audio.year is Session.UNCATEGORIZED_KEY:
+        year_tag = str(audio.year)
+        if not year_tag in self.stations:
+          self.stations[year_tag] = Station()
+        self.stations[year_tag].add_item(audio)
+      else:
+        prettyprint(COLORS.YELLOW, '[WARN] Audio file has no year: %s' % audio.filename)
+        self.stations[Session.UNCATEGORIZED_KEY].add_item(audio)
+      # Store Rakim in a special place.
+      if not audio.artist is None and Session.RA_REGEX.match(audio.artist):
+        raStation.add_item(audio)
     self.generate_listing_by_year()
     if raStation.length() > 0:
       self.appendStation(raStation)

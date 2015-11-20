@@ -1,6 +1,5 @@
 import serial
 import time
-import RPi.GPIO as GPIO
 
 import radiopi.settings as settings
 

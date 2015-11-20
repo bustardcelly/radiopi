@@ -9,6 +9,45 @@ from mutagen.easyid3 import EasyID3
 def filename_title(path):
   return os.path.basename(path)
 
+class AudioItemObject:
+
+  year_regex = re.compile('(\d{4})', re.IGNORECASE)
+  metaprops = ['artist', 'album', 'filename']
+  UNAVAILABLE_FIELD = 'N/A'
+
+  def __init__(self, obj):
+      self.audio_object = obj
+
+  def __getattr__(self, name):
+    if name in AudioItemObject.metaprops:
+      return self.audio_object[name].encode('utf-8')
+    elif name is 'length':
+      return self.audio_object['length']
+    elif name is 'title':
+      title = self.audio_object['title'].encode('utf-8')
+      return title if title is not AudioItemObject.UNAVAILABLE_FIELD else filename_title(self.filename)
+    elif name is 'year':
+      value = self.audio_object['year'].encode('utf-8')
+      if value != AudioItemObject.UNAVAILABLE_FIELD:
+        value = str(AudioItemObject.year_regex.match(value).group())
+      else:
+        print "[WARN] - %s has no year" % self.filename
+      return value
+    elif name is 'image':
+      return File(self.filename).tags['APIC:'].data
+    else:
+      return object.__getattribute__(self, name)
+
+  def __str__(self):
+    return json.dumps({\
+      'artist': self.artist, \
+      'title': self.title, \
+      'album': self.album, \
+      'filename': self.filename, \
+      'length': self.length, \
+      'year': self.year\
+      }, indent=2)
+
 class AudioItem:
 
   year_regex = re.compile('(\d{4})', re.IGNORECASE)
