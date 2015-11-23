@@ -33,6 +33,8 @@ class AudioItemObject:
       else:
         print "[WARN] - %s has no year" % self.filename
       return value
+    elif name is 'bitrate':
+      return self.audio_object['bitrate']
     elif name is 'image':
       return File(self.filename).tags['APIC:'].data
     else:
@@ -45,7 +47,8 @@ class AudioItemObject:
       'album': self.album, \
       'filename': self.filename, \
       'length': self.length, \
-      'year': self.year\
+      'year': self.year, \
+      'bitrate': self.bitrate\
       }, indent=2)
 
 class AudioItem:

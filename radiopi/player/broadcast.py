@@ -15,7 +15,6 @@ class PyGameBroadcast():
     os.environ["SDL_VIDEODRIVER"] = "dummy"
     try:
       pygame.init()
-      pygame.mixer.init()
       self.playing = False
       print 'Pygame Broadcast player started...'
     except:
@@ -28,6 +27,8 @@ class PyGameBroadcast():
   def play(self, file, start=0):
     prettyprint(COLORS.WHITE, 'PyGameBroadcast playing: %s' % file.filename)
     try:
+      pygame.mixer.quit()
+      pygame.mixer.init(file.bitrate)
       pygame.mixer.music.load(file.filename)
       pygame.mixer.music.play(0, start)
       self.playing = True
