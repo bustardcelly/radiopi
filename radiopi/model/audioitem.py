@@ -25,7 +25,7 @@ class AudioItemObject:
       return self.audio_object['length']
     elif name is 'title':
       title = self.audio_object['title'].encode('utf-8')
-      return title if title is not AudioItemObject.UNAVAILABLE_FIELD else filename_title(self.filename)
+      return title if title != AudioItemObject.UNAVAILABLE_FIELD else filename_title(self.filename)
     elif name is 'year':
       value = self.audio_object['year'].encode('utf-8')
       if value != AudioItemObject.UNAVAILABLE_FIELD:
@@ -75,12 +75,12 @@ class AudioItem:
       return self.source.info.length
     elif name is 'title':
       title = self.value_from_tag('title')
-      return title if title is not AudioItem.UNAVAILABLE_FIELD else filename_title(self.filepath)
+      return title if title != AudioItem.UNAVAILABLE_FIELD else filename_title(self.filepath)
     elif name in AudioItem.metaprops:
       return self.value_from_tag(name)
     elif name is 'year':
       value = self.value_from_tag('date')
-      if value is not AudioItem.UNAVAILABLE_FIELD:
+      if value != AudioItem.UNAVAILABLE_FIELD:
         value = str(AudioItem.year_regex.match(value).group())
       return value
     elif name is 'image':
