@@ -6,13 +6,13 @@ from mutagen.mp3 import MP3
 from mutagen.id3 import ID3, TDRC
 from mutagen.easyid3 import EasyID3
 
-def filename_title(path):
+def filepath_title(path):
   return os.path.basename(path)
 
 class AudioItemObject:
 
   year_regex = re.compile('(\d{4})', re.IGNORECASE)
-  metaprops = ['artist', 'album', 'filename']
+  metaprops = ['artist', 'album', 'filepath']
   UNAVAILABLE_FIELD = 'N/A'
 
   def __init__(self, obj):
@@ -25,18 +25,18 @@ class AudioItemObject:
       return self.audio_object['length']
     elif name is 'title':
       title = self.audio_object['title'].encode('utf-8')
-      return title if title != AudioItemObject.UNAVAILABLE_FIELD else filename_title(self.filename)
+      return title if title != AudioItemObject.UNAVAILABLE_FIELD else filepath_title(self.filepath)
     elif name is 'year':
       value = self.audio_object['year'].encode('utf-8')
       if value != AudioItemObject.UNAVAILABLE_FIELD:
         value = str(AudioItemObject.year_regex.match(value).group())
       else:
-        print "[WARN] - %s has no year" % self.filename
+        print "[WARN] - %s has no year" % self.filepath
       return value
     elif name is 'bitrate':
       return self.audio_object['bitrate']
     elif name is 'image':
-      return File(self.filename).tags['APIC:'].data
+      return File(self.filepath).tags['APIC:'].data
     else:
       return object.__getattribute__(self, name)
 
@@ -45,7 +45,7 @@ class AudioItemObject:
       'artist': self.artist, \
       'title': self.title, \
       'album': self.album, \
-      'filename': self.filename, \
+      'filepath': self.filepath, \
       'length': self.length, \
       'year': self.year, \
       'bitrate': self.bitrate\
@@ -75,7 +75,7 @@ class AudioItem:
       return self.source.info.length
     elif name is 'title':
       title = self.value_from_tag('title')
-      return title if title != AudioItem.UNAVAILABLE_FIELD else filename_title(self.filepath)
+      return title if title != AudioItem.UNAVAILABLE_FIELD else filepath_title(self.filepath)
     elif name in AudioItem.metaprops:
       return self.value_from_tag(name)
     elif name is 'year':
@@ -96,7 +96,7 @@ class AudioItem:
       'artist': self.artist, \
       'title': self.title, \
       'album': self.album, \
-      'filename': self.filename, \
+      'filepath': self.filepath, \
       'length': self.length, \
       'year': self.year\
       }, indent=2)

@@ -5,8 +5,8 @@ from radiopi.file.audiodir import AudioDirectory
 
 logger = logging.getLogger(__name__)
 
-def resolve_directory(root, filename):
-  return os.path.abspath(os.path.join(root, filename));
+def resolve_directory(root, filepath):
+  return os.path.abspath(os.path.join(root, filepath));
 
 # @Given
 @step('I have defined a target directory at "([^"]*)"')

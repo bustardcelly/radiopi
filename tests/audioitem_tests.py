@@ -6,7 +6,7 @@ filepath = os.path.abspath(os.path.join('.', 'features/fixtures/audio/09 - Anyth
 audioitem = AudioItem(filepath)
 
 def test_filepath_access():
-  path = audioitem.filename
+  path = audioitem.filepath
   assert_equals(path, filepath, 'Filepath exposed on audioitem should be %s, was %s' % (filepath, path))
 
 def test_year_access():

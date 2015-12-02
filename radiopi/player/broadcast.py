@@ -25,15 +25,15 @@ class PyGameBroadcast():
     pygame.mixer.music.set_endevent(event_id)
 
   def play(self, file, start=0):
-    prettyprint(COLORS.WHITE, 'PyGameBroadcast playing: %s' % file.filename)
+    prettyprint(COLORS.WHITE, 'PyGameBroadcast playing: %s' % file.filepath)
     try:
       pygame.mixer.quit()
       pygame.mixer.init(file.bitrate)
-      pygame.mixer.music.load(file.filename)
+      pygame.mixer.music.load(file.filepath)
       pygame.mixer.music.play(0, start)
       self.playing = True
     except pygame.error:
-      prettyprint(COLORS.RED, 'Could not play %s! (%s)' % (file.filename, pygame.get_error()))
+      prettyprint(COLORS.RED, 'Could not play %s! (%s)' % (file.filepath, pygame.get_error()))
       self.stop()
       raise
 
@@ -81,8 +81,8 @@ class OSXBroadcast():
   def play(self, file, start=0):
     try:
       self.clear()
-      prettyprint(COLORS.YELLOW, 'Playing file, %s' % file.filename)
-      call(['afplay', file.filename])
+      prettyprint(COLORS.YELLOW, 'Playing file, %s' % file.filepath)
+      call(['afplay', file.filepath])
       self.timer = Timer(file.length, self.play_end_handler)
       self.timer.start()
       self.playing = True

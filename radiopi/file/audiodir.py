@@ -13,7 +13,7 @@ extension = re.compile('^(?!._)(.*?).m(p3|4a)', re.IGNORECASE)
 class AudioDirectory:
 
   """
-  Takes list of filenames and converts them to Audio items
+  Takes list of filepaths and converts them to Audio items
   """
 
   location = None
@@ -28,9 +28,9 @@ class AudioDirectory:
     for root, dirs, files in os.walk(self.location):
       for f in files:
         if extension.match(f):
-          filename = os.path.abspath(os.path.join(root, f))
+          filepath = os.path.abspath(os.path.join(root, f))
           try:
-              self.files.append(AudioItem(filename))
+              self.files.append(AudioItem(filepath))
           except:
             e = sys.exc_info()[0]
             prettyprint(COLORS.RED, 'Could not convert to audio file for station: %s' % f)

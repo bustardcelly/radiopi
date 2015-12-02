@@ -11,11 +11,11 @@ from radiopi.control.dial import Dial
 from radiopi.player.radio import Radio
 
 class MockAudioItem():
-  def __init__(self, year, title, artist, filename, length):
+  def __init__(self, year, title, artist, filepath, length):
     self.year = year
     self.title = title
     self.artist = artist
-    self.filename = filename
+    self.filepath = filepath
     self.length = length
 
 # @Given
