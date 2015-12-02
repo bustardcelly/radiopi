@@ -19,6 +19,8 @@ class AudioItemObject:
       self.audio_object = obj
 
   def __getattr__(self, name):
+    if name is 'filename':
+      return self.filepath
     if name in AudioItemObject.metaprops:
       return self.audio_object[name].encode('utf-8')
     elif name is 'length':

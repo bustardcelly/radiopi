@@ -16,6 +16,8 @@ class PyGameBroadcast():
     try:
       pygame.init()
       self.playing = False
+#      pygame.mixer.init(44100)
+#      pygame.mixer.init(48000)
       print 'Pygame Broadcast player started...'
     except:
       traceback.print_exc(file=sys.stdout)
@@ -27,9 +29,11 @@ class PyGameBroadcast():
   def play(self, file, start=0):
     prettyprint(COLORS.WHITE, 'PyGameBroadcast playing: %s' % file.filepath)
     try:
-      pygame.mixer.quit()
-      pygame.mixer.init(file.bitrate)
-      pygame.mixer.music.load(file.filepath)
+      if self.playing:
+        pygame.mixer.quit()
+      print file
+      pygame.mixer.init(44100)
+      pygame.mixer.music.load(file.filename)
       pygame.mixer.music.play(0, start)
       self.playing = True
     except pygame.error:

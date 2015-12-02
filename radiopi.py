@@ -200,8 +200,10 @@ def pi_main():
 
   session = Session()
   if audio_json is not None:
+    print "Loading json file: %s" % audio_json
     session.inflate(AudioJSON(audio_json).parse())
   else:
+    print "Loading from disk..."
     session.inflate(AudioDirectory('/mnt/usb/hip hop').parse())
 
   player = PyGameBroadcast()
@@ -227,13 +229,13 @@ def pi_main():
   # threads
   lcdThread = LCDDisplayThread(display, radio)
   yearThread = YearDisplayThread(year_display, dial)
-#  tftThread = TFTDisplayThread(tft_display, radio)
+  tftThread = TFTDisplayThread(tft_display, radio)
   lcdThread.setDaemon(True)
   yearThread.setDaemon(True)
-#  tftThread.setDaemon(True)
+  tftThread.setDaemon(True)
   lcdThread.start()
   yearThread.start()
-#  tftThread.start()
+  tftThread.start()
 
   while running:
     try:
