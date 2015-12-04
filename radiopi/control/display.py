@@ -6,9 +6,8 @@ import radiopi.settings as settings
 from radiopi import prettyprint
 from radiopi import COLORS
 
-CLEAR = b'\xFE\x0C'
-BACKLIGHT = b'\xFE\x7C'
-WRITE = b'\xFE\x01'
+CLEAR = b'\xFE\x01'
+WRITE = b'\xFE\x80'
 OFF = b'\xFE\x41'
 ON = b'\xFE\x42'
 
@@ -58,9 +57,10 @@ class LCDDisplay():
   def scroll(self):
     self.ser.write(WRITE)
     output = ''
-    for line in self.lines:
-      output += line[self.index:self.index+self.columns]
-    self.ser.write(output)
+    self.ser.write(self.lines[0][self.index:self.index+self.columns])
+    if len(self.lines) > 1:
+      self.ser.write(b'\xFE\xC0')
+      self.ser.write(self.lines[1][self.index:self.index+self.columns])
 
   def scroll_right(self):
     self.vector = 1
